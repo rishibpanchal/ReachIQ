@@ -1,4 +1,5 @@
 import { Menu, Bell, HelpCircle, Sun, Moon } from 'lucide-react'
+import { SignedIn, UserButton } from '@clerk/clerk-react'
 import { useUIStore } from '@/store'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -8,6 +9,7 @@ import GlobalCompanySearch from '@/components/search/GlobalCompanySearch'
 
 export default function Navbar() {
   const { sidebarOpen, toggleSidebar, theme, toggleTheme } = useUIStore()
+  const logoSrc = theme === 'dark' ? '/polydeal_logo_dark.png' : '/polydeal_logo_light.png'
 
   return (
     <header 
@@ -16,17 +18,26 @@ export default function Navbar() {
         sidebarOpen ? 'left-0 lg:left-64' : 'left-0'
       )}
     >
-      {/* Mobile menu button */}
-      {!sidebarOpen && (
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={toggleSidebar}
-          className="lg:hidden"
-        >
-          <Menu className="h-5 w-5" />
-        </Button>
-      )}
+      {/* Mobile menu button + Logo */}
+      <div className="flex items-center gap-3">
+        {!sidebarOpen && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleSidebar}
+            className="lg:hidden"
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+        )}
+        {!sidebarOpen && (
+          <img
+            src={logoSrc}
+            alt="PolyDeal Logo"
+            className="h-8 w-8 object-contain"
+          />
+        )}
+      </div>
 
       {/* Global Search */}
       <GlobalCompanySearch />
@@ -56,6 +67,10 @@ export default function Navbar() {
             3
           </Badge>
         </Button>
+
+        <SignedIn>
+          <UserButton afterSignOutUrl="/" />
+        </SignedIn>
       </div>
     </header>
   )

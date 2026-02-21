@@ -24,6 +24,7 @@ import { Network, User } from 'lucide-react'
 import { useBuyers, useBuyerOutreachData } from '@/hooks/useApi'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Select } from '@/components/ui/select'
 
 const nodeColor = (status: string) => {
   switch (status) {
@@ -153,20 +154,17 @@ export default function Workflow() {
           <h1 className="text-3xl font-bold">Outreach Strategy</h1>
           <p className="text-muted-foreground">Visualize and manage outreach workflows for selected buyers</p>
         </div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 bg-card border rounded-lg px-4 py-2 shadow-sm hover:border-primary/50 transition-colors">
-            <User className="h-4 w-4 text-primary" />
-            <select
-              value={selectedBuyerId}
-              onChange={(e) => setSelectedBuyerId(e.target.value)}
-              className="bg-transparent text-sm font-semibold focus:outline-none min-w-[200px] cursor-pointer"
-            >
-              <option disabled>Select Buyer</option>
-              {buyers?.map(buyer => (
-                <option key={buyer.id} value={buyer.id}>{buyer.name}</option>
-              ))}
-            </select>
-          </div>
+        <div className="flex items-center gap-2">
+          <User className="h-5 w-5 text-primary" />
+          <Select
+            value={selectedBuyerId}
+            onChange={(e) => setSelectedBuyerId(e.target.value)}
+          >
+            <option disabled>Select Buyer</option>
+            {buyers?.map(buyer => (
+              <option key={buyer.id} value={buyer.id}>{buyer.name}</option>
+            ))}
+          </Select>
         </div>
       </div>
 
