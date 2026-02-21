@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 import axios from 'axios'
 import type {
   Company,
@@ -14,15 +16,16 @@ import type {
   BuyerOutreachData,
 } from '@/types'
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'
+const SUPABASE_FUNCTION_URL = import.meta.env.VITE_SUPABASE_FUNCTION_URL || 'https://bemxpoldmjcevaqmeuep.supabase.co/functions/v1'
+
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api',
+  baseURL: API_BASE_URL,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },
 })
-
-const SUPABASE_FUNCTION_URL = 'https://bemxpoldmjcevaqmeuep.supabase.co/functions/v1'
 
 // Request interceptor
 api.interceptors.request.use(

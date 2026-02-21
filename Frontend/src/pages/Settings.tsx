@@ -107,7 +107,7 @@ export default function Settings() {
           <CardContent className="space-y-4">
             <div>
               <label className="text-sm font-medium mb-2 block">API Base URL</label>
-              <Input defaultValue="http://localhost:8000/api" />
+              <Input defaultValue={import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'} />
             </div>
             <div>
               <label className="text-sm font-medium mb-2 block">API Key</label>
