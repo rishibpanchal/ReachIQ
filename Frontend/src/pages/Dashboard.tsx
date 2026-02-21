@@ -2,7 +2,6 @@ import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { Building2, TrendingUp, Activity, AlertCircle } from 'lucide-react'
 import { useDashboardStats } from '@/hooks/useApi'
-import { useFetchMeetings } from '@/services/meetingApi'
 import StatCard from '@/components/cards/StatCard'
 import IntentPieChart from '@/components/charts/IntentPieChart'
 import ChannelBarChart from '@/components/charts/ChannelBarChart'
@@ -13,11 +12,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { getIntentBadge, getIntentLabel } from '@/lib/utils'
+import { useMeetingStore } from '@/store/meetingStore'
 
 export default function Dashboard() {
   const navigate = useNavigate()
   const { data: stats, isLoading } = useDashboardStats()
-  const { isLoading: isMeetingsLoading } = useFetchMeetings()
+  const meetings = useMeetingStore(state => state.meetings)
+  const scheduledMeetings = [...meetings].sort((a, b) => new Date(`${a.date}T${a.startTime}`).getTime() - new Date(`${b.date}T${b.startTime}`).getTime())
 
   if (isLoading) {
     return (
@@ -92,46 +93,51 @@ export default function Dashboard() {
             <CardTitle className="flex items-center gap-2 text-xl font-bold">
               System Meetings
               <Badge variant="outline" className="ml-2 bg-primary/5 text-primary border-primary/20">
-                {stats.upcoming_meetings.length} scheduled
+                {scheduledMeetings.length} scheduled
               </Badge>
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {stats.upcoming_meetings.map((meeting) => (
-                <Card key={meeting.id} className="bg-accent/30 border-none shadow-none hover:bg-accent/50 transition-colors cursor-pointer">
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="font-bold text-sm tracking-tight">{meeting.company_name}</span>
-                      <Badge
-                        variant={meeting.status === 'Confirmed' ? 'default' : 'secondary'}
-                        className={`text-[10px] px-1.5 py-0.5 rounded-sm uppercase tracking-wider ${meeting.status === 'Confirmed' ? 'bg-green-500/20 text-green-700 hover:bg-green-500/20' : 'bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/20'
-                          }`}
-                      >
-                        {meeting.status}
-                      </Badge>
-                    </div>
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-muted-foreground">Attendee:</span>
-                        <span className="font-medium">{meeting.contact_name}</span>
+              {scheduledMeetings.length === 0 ? (
+                <div className="col-span-full py-8 text-center text-muted-foreground">
+                  No meetings scheduled. Use the floating + button to schedule one.
+                </div>
+              ) : (
+                scheduledMeetings.map((meeting) => (
+                  <Card key={meeting.id} className="bg-accent/30 border-none shadow-none hover:bg-accent/50 transition-colors cursor-pointer">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="font-bold text-sm tracking-tight">{meeting.title || "Meeting"}</span>
+                        <Badge
+                          variant={'default'}
+                          className={`text-[10px] px-1.5 py-0.5 rounded-sm uppercase tracking-wider bg-green-500/20 text-green-700 hover:bg-green-500/20`}
+                        >
+                          Scheduled
+                        </Badge>
                       </div>
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-muted-foreground">Type:</span>
-                        <span className="text-primary font-semibold">{meeting.type}</span>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="text-muted-foreground">Company:</span>
+                          <span className="font-medium">{meeting.company || 'N/A'}</span>
+                        </div>
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="text-muted-foreground">Type:</span>
+                          <span className="text-primary font-semibold">{meeting.type}</span>
+                        </div>
+                        <div className="pt-2 border-t border-accent/50 flex items-center justify-between text-[11px]">
+                          <span className="text-muted-foreground font-medium">
+                            {new Date(meeting.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
+                          </span>
+                          <span className="text-foreground font-bold italic">
+                            {meeting.startTime} - {meeting.endTime}
+                          </span>
+                        </div>
                       </div>
-                      <div className="pt-2 border-t border-accent/50 flex items-center justify-between text-[11px]">
-                        <span className="text-muted-foreground font-medium">
-                          {new Date(meeting.time).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
-                        </span>
-                        <span className="text-foreground font-bold italic">
-                          {new Date(meeting.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} ({meeting.duration})
-                        </span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                    </CardContent>
+                  </Card>
+                ))
+              )}
             </div>
           </CardContent>
         </Card>

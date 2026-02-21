@@ -19,16 +19,17 @@ interface MeetingStore {
   meetings: Meeting[]
   isModalOpen: boolean
   isLoading: boolean
-  
+  initialMeetingData?: Partial<Meeting>
+
   // Actions
-  openModal: () => void
+  openModal: (initialData?: Partial<Meeting>) => void
   closeModal: () => void
   setMeetings: (meetings: Meeting[]) => void
   addMeeting: (meeting: Meeting) => void
   removeMeeting: (id: string) => void
   updateMeeting: (id: string, meeting: Partial<Meeting>) => void
   setLoading: (loading: boolean) => void
-  
+
   // Filters
   getTodayMeetings: () => Meeting[]
   getThisWeekMeetings: () => Meeting[]
@@ -39,12 +40,13 @@ export const useMeetingStore = create<MeetingStore>((set, get) => ({
   meetings: [],
   isModalOpen: false,
   isLoading: false,
+  initialMeetingData: undefined,
 
-  openModal: () => set({ isModalOpen: true }),
-  closeModal: () => set({ isModalOpen: false }),
-  
+  openModal: (initialData) => set({ isModalOpen: true, initialMeetingData: initialData }),
+  closeModal: () => set({ isModalOpen: false, initialMeetingData: undefined }),
+
   setMeetings: (meetings) => set({ meetings }),
-  
+
   addMeeting: (meeting) => {
     const state = get()
     const existingIndex = state.meetings.findIndex(m => m.id === meeting.id)
@@ -56,21 +58,21 @@ export const useMeetingStore = create<MeetingStore>((set, get) => ({
       set({ meetings: [...state.meetings, meeting] })
     }
   },
-  
+
   removeMeeting: (id) => {
     const state = get()
     set({ meetings: state.meetings.filter(m => m.id !== id) })
   },
-  
+
   updateMeeting: (id, updates) => {
     const state = get()
     set({
-      meetings: state.meetings.map(m => 
+      meetings: state.meetings.map(m =>
         m.id === id ? { ...m, ...updates, updatedAt: new Date().toISOString() } : m
       )
     })
   },
-  
+
   setLoading: (loading) => set({ isLoading: loading }),
 
   getTodayMeetings: () => {
@@ -83,7 +85,7 @@ export const useMeetingStore = create<MeetingStore>((set, get) => ({
     const weekStart = new Date(now)
     weekStart.setDate(now.getDate() - now.getDay())
     weekStart.setHours(0, 0, 0, 0)
-    
+
     const weekEnd = new Date(weekStart)
     weekEnd.setDate(weekStart.getDate() + 6)
     weekEnd.setHours(23, 59, 59, 999)

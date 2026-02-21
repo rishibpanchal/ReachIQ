@@ -11,7 +11,7 @@ type FilterType = 'today' | 'week' | 'month'
 export default function UpcomingMeetings() {
   const [filter, setFilter] = useState<FilterType>('week')
 
-  const meetings = useMeetingStore((state) => state.meetings)
+
   const getTodayMeetings = useMeetingStore((state) => state.getTodayMeetings)
   const getThisWeekMeetings = useMeetingStore((state) => state.getThisWeekMeetings)
   const getThisMonthMeetings = useMeetingStore((state) => state.getThisMonthMeetings)

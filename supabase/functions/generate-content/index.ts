@@ -1,9 +1,9 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
-const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY')
-const SUPABASE_URL = Deno.env.get('SUPABASE_URL')
-const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 
 serve(async (req) => {
     if (req.method === 'OPTIONS') {
@@ -63,29 +63,38 @@ Context:
 
 The message should be optimized for ${type}.`
 
-        // Call Anthropic
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
+        // Call Gemini
+        const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY')!
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
             method: 'POST',
             headers: {
-                'x-api-key': ANTHROPIC_API_KEY,
-                'anthropic-version': '2023-06-01',
-                'content-type': 'application/json',
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                model: 'claude-3-5-sonnet-20240620',
-                max_tokens: 1024,
-                system: systemPrompt,
-                messages: [{ role: 'user', content: userPrompt }],
+                system_instruction: {
+                    parts: [{ text: systemPrompt }]
+                },
+                contents: [{
+                    parts: [{ text: userPrompt }]
+                }],
+                generationConfig: {
+                    maxOutputTokens: 1024,
+                }
             }),
         })
 
         const result = await response.json()
-        const content = result.content[0].text
+
+        if (!response.ok) {
+            throw new Error(result.error?.message || 'Failed to generate content')
+        }
+
+        const content = result.candidates[0].content.parts[0].text
 
         return new Response(JSON.stringify({ content }), {
             headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
         })
-    } catch (error) {
+    } catch (error: any) {
         return new Response(JSON.stringify({ error: error.message }), {
             status: 400,
             headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },

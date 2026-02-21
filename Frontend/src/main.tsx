@@ -16,9 +16,11 @@ const queryClient = new QueryClient({
   },
 })
 
+// eslint-disable-next-line react-refresh/only-export-components
 function ClerkProviderWithNavigate({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate()
-  const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const clerkPubKey = (import.meta as any).env.VITE_CLERK_PUBLISHABLE_KEY
 
   if (!clerkPubKey) {
     throw new Error('Missing VITE_CLERK_PUBLISHABLE_KEY')
@@ -27,9 +29,10 @@ function ClerkProviderWithNavigate({ children }: { children: React.ReactNode }) 
   return (
     <ClerkProvider
       publishableKey={clerkPubKey}
-      navigate={(to) => navigate(to)}
-      afterSignInUrl="/dashboard"
-      afterSignUpUrl="/dashboard"
+      routerPush={(to: string) => navigate(to)}
+      routerReplace={(to: string) => navigate(to, { replace: true })}
+      signInFallbackRedirectUrl="/dashboard"
+      signUpFallbackRedirectUrl="/dashboard"
     >
       {children}
     </ClerkProvider>
