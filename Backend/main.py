@@ -4,12 +4,21 @@ FastAPI Main Application
 PolyDeal Growth Curve Prediction System
 """
 
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+# Load .env from Backend, project root, and Frontend (GNEWS_API_KEY)
+load_dotenv(Path(__file__).parent / ".env")
+load_dotenv(Path(__file__).parent.parent / ".env")
+load_dotenv(Path(__file__).parent.parent / "Frontend" / ".env")
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 from contextlib import asynccontextmanager
 
-from routes import analytics, companies, dashboard
+from routes import analytics, companies, dashboard, news
 
 # Configure logging
 logging.basicConfig(
@@ -50,6 +59,7 @@ app.add_middleware(
 app.include_router(analytics.router, prefix="/api/analytics", tags=["Analytics"])
 app.include_router(companies.router, prefix="/api/companies", tags=["Companies"])
 app.include_router(dashboard.router, prefix="/api/dashboard", tags=["Dashboard"])
+app.include_router(news.router, prefix="/api/news", tags=["News"])
 
 
 @app.get("/")

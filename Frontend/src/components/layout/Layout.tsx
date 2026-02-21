@@ -1,7 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import Navbar from './Navbar'
-import FloatingMeetingButton from '@/components/meeting/FloatingMeetingButton'
 import MeetingModal from '@/components/meeting/MeetingModal'
 import { useUIStore } from '@/store'
 import { cn } from '@/lib/utils'
@@ -13,7 +12,7 @@ export default function Layout() {
     <div className="flex h-screen overflow-hidden bg-background">
       <Sidebar />
       <Navbar />
-      
+
       <div
         className={cn(
           'flex flex-1 flex-col transition-all duration-300 pt-16',
@@ -26,7 +25,6 @@ export default function Layout() {
       </div>
 
       {/* Global Meeting System */}
-      <FloatingMeetingButton />
       <MeetingModal />
     </div>
   )

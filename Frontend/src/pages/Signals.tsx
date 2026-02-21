@@ -4,6 +4,7 @@ import { useSignals } from '@/hooks/useApi'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { formatDateTime } from '@/lib/utils'
+import WorldNewsSection from '@/components/signals/WorldNewsSection'
 
 const signalTypeIcons = {
   hiring: '💼',
@@ -133,17 +134,26 @@ export default function Signals() {
         </motion.div>
       </div>
 
+      {/* World News & Market Intelligence */}
+      <WorldNewsSection />
+
       {/* Signal Feed */}
       <div className="space-y-3">
         <h2 className="text-xl font-semibold">Live Signal Feed</h2>
-        {data?.signals.map((signal, index) => (
+        {data?.signals.map((signal, index) => {
+          const CardWrapper = signal.url ? 'a' : 'div'
+          const wrapperProps = signal.url
+            ? { href: signal.url, target: '_blank', rel: 'noopener noreferrer' as const }
+            : {}
+          return (
           <motion.div
             key={signal.id}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3, delay: index * 0.05 }}
           >
-            <Card className="hover:shadow-lg transition-shadow">
+            <CardWrapper {...wrapperProps} className={signal.url ? 'block' : undefined}>
+            <Card className={`hover:shadow-lg transition-shadow ${signal.url ? 'hover:border-primary/50 cursor-pointer' : ''}`}>
               <CardContent className="pt-6">
                 <div className="flex items-start gap-4">
                   {/* Icon */}
@@ -181,8 +191,10 @@ export default function Signals() {
                 </div>
               </CardContent>
             </Card>
+            </CardWrapper>
           </motion.div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

@@ -23,6 +23,7 @@ export interface Signal {
   strength: number
   timestamp: string
   source?: string
+  url?: string
 }
 
 export interface OutreachStrategy {

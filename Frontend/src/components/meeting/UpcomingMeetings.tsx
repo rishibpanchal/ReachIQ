@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react'
-import { Clock, MapPin, Users } from 'lucide-react'
+import { Calendar, Clock, MapPin, Users, Plus } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useMeetingStore } from '@/store/meetingStore'
+import { useUIStore } from '@/store'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Select } from '@/components/ui/select'
@@ -11,6 +12,14 @@ type FilterType = 'today' | 'week' | 'month'
 export default function UpcomingMeetings() {
   const [filter, setFilter] = useState<FilterType>('week')
 
+  const { selectedCompanyId } = useUIStore()
+  const openModal = useMeetingStore((state) => state.openModal)
+
+  const handleOpenSchedule = () => {
+    openModal({
+      company: selectedCompanyId || undefined
+    })
+  }
 
   const getTodayMeetings = useMeetingStore((state) => state.getTodayMeetings)
   const getThisWeekMeetings = useMeetingStore((state) => state.getThisWeekMeetings)
@@ -73,15 +82,24 @@ export default function UpcomingMeetings() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0">
           <CardTitle>Upcoming Meetings</CardTitle>
-          <Select
-            value={filter}
-            onChange={(e) => setFilter(e.target.value as FilterType)}
-            className="w-40"
-          >
-            <option value="today">Today</option>
-            <option value="week">This Week</option>
-            <option value="month">This Month</option>
-          </Select>
+          <div className="flex items-center gap-3">
+            <Select
+              value={filter}
+              onChange={(e) => setFilter(e.target.value as FilterType)}
+              className="w-40"
+            >
+              <option value="today">Today</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+            </Select>
+            <button
+              onClick={handleOpenSchedule}
+              className="flex items-center justify-center h-10 w-10 rounded-md bg-emerald-500 hover:bg-emerald-600 text-white transition-colors"
+              aria-label="Schedule meeting"
+            >
+              <Plus className="h-5 w-5" />
+            </button>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
@@ -176,5 +194,3 @@ export default function UpcomingMeetings() {
     </motion.div>
   )
 }
-
-import { Calendar } from 'lucide-react'

@@ -62,16 +62,37 @@ export const useCompany = (id: string) => {
   })
 }
 
-// Signal Hooks
+// Convert world news to Signal format for Live Signal Feed
+function newsToSignals(articles: api.WorldNewsArticle[]): import('@/types').Signal[] {
+  return articles.map((a, i) => ({
+    id: a.id || `news-${i}`,
+    type: 'news' as const,
+    title: a.title,
+    description: a.description || '',
+    strength: 70 + Math.min(25, i * 3), // Higher for newer/top articles
+    timestamp: a.publishedAt,
+    source: a.source,
+    url: a.url,
+  }))
+}
+
+// Signal Hooks - uses world news for Live Signal Feed; falls back to mock when API unavailable
 export const useSignals = (params?: { page?: number; limit?: number; type?: string }) => {
+  const worldNews = useWorldNews()
+  const hasNews = worldNews.data?.articles?.length
   return useQuery({
-    queryKey: ['signals', params],
+    queryKey: ['signals', params, hasNews ? worldNews.data : null],
     queryFn: async () => {
-      if (USE_MOCK_DATA) {
-        return { signals: mockSignals, total: mockSignals.length }
+      if (worldNews.data?.articles?.length) {
+        return {
+          signals: newsToSignals(worldNews.data.articles),
+          total: worldNews.data.total,
+        }
       }
+      if (USE_MOCK_DATA) return { signals: mockSignals, total: mockSignals.length }
       return api.getSignals(params)
     },
+    enabled: !worldNews.isLoading,
   })
 }
 
@@ -264,5 +285,14 @@ export const useBuyerOutreachData = (buyerId: string) => {
       return api.getBuyerOutreachData(buyerId)
     },
     enabled: !!buyerId,
+  })
+}
+
+// World News - always calls real API (GNews proxy), no mock
+export const useWorldNews = () => {
+  return useQuery({
+    queryKey: ['worldNews'],
+    queryFn: api.getWorldNews,
+    staleTime: 1000 * 60 * 5, // 5 minutes
   })
 }

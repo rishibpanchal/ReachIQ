@@ -16,7 +16,10 @@ import type {
   BuyerOutreachData,
 } from '@/types'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'
+// In dev: use Vite proxy (/api) to avoid CORS. In prod: use env or fallback.
+const API_BASE_URL = import.meta.env.DEV
+  ? '/api'
+  : (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api')
 const SUPABASE_FUNCTION_URL = import.meta.env.VITE_SUPABASE_FUNCTION_URL || 'https://bemxpoldmjcevaqmeuep.supabase.co/functions/v1'
 
 const api = axios.create({
@@ -178,6 +181,30 @@ export const getBuyers = async (): Promise<Buyer[]> => {
 
 export const getBuyerOutreachData = async (buyerId: string): Promise<BuyerOutreachData> => {
   const response = await api.get<ApiResponse<BuyerOutreachData>>(`/buyers/${buyerId}/outreach`)
+  return response.data.data
+}
+
+// World News (GNews proxy) - for Signal Monitor
+export interface WorldNewsArticle {
+  id: string
+  title: string
+  description: string
+  url: string
+  image?: string
+  publishedAt: string
+  source: string
+  sourceUrl?: string
+  category: 'business' | 'technology' | 'industry' | 'world' | 'science' | 'health' | 'entertainment' | 'general'
+}
+
+export const getWorldNews = async (): Promise<{
+  articles: WorldNewsArticle[]
+  total: number
+  error?: string
+}> => {
+  const response = await api.get<
+    ApiResponse<{ articles: WorldNewsArticle[]; total: number; error?: string }>
+  >('/news/world')
   return response.data.data
 }
 
