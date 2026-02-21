@@ -8,7 +8,6 @@ import ContentGenerator from '@/pages/ContentGenerator'
 import Signals from '@/pages/Signals'
 import Conversations from '@/pages/Conversations'
 import Analytics from '@/pages/Analytics'
-import Settings from '@/pages/Settings'
 import SchedulePage from '@/pages/SchedulePage'
 import AuthPage from '@/pages/AuthPage'
 import DashboardPage from '@/pages/DashboardPage'
@@ -52,7 +51,6 @@ function App() {
         <Route path="/signals" element={<Signals />} />
         <Route path="/conversations" element={<Conversations />} />
         <Route path="/analytics" element={<Analytics />} />
-        <Route path="/settings" element={<Settings />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
