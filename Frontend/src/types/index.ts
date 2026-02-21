@@ -204,10 +204,17 @@ export interface SearchResult {
 export interface Buyer {
   id: string
   name: string
+  industry: string
+  company_size?: string
+  location?: string
 }
 
 export interface BuyerOutreachData {
   buyer_id: string
+  intent_score: number
+  linkedin_engagement: number
+  groups?: string
+  previous_channel: string
   channels: {
     name: string
     value: number

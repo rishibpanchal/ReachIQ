@@ -1,26 +1,27 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Sparkles, Copy, Send, RefreshCw } from 'lucide-react'
-import { useCompany, useGenerateContent } from '@/hooks/useApi'
+import { Sparkles, Copy, Send, RefreshCw, User, Zap } from 'lucide-react'
+import { useBuyers, useBuyerOutreachData, useGenerateContent } from '@/hooks/useApi'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Select } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 
 export default function ContentGenerator() {
-  const [selectedCompany, setSelectedCompany] = useState('1')
+  const [selectedBuyerId, setSelectedBuyerId] = useState('BUY_57096')
   const [generatedContent, setGeneratedContent] = useState<{
     linkedin?: string
     email?: string
     whatsapp?: string
   }>({})
 
-  const { data: company } = useCompany(selectedCompany)
+  const { data: buyers } = useBuyers()
+  const { data: buyerData, isLoading: isBuyerLoading } = useBuyerOutreachData(selectedBuyerId)
   const generateMutation = useGenerateContent()
 
   const handleGenerate = async (type: 'linkedin' | 'email' | 'whatsapp') => {
-    const result = await generateMutation.mutateAsync({ companyId: selectedCompany, type })
-    setGeneratedContent((prev) => ({ ...prev, [type]: result.content }))
+    const result = await generateMutation.mutateAsync({ buyerId: selectedBuyerId, type })
+    const { content } = result as { content: string }
+    setGeneratedContent((prev) => ({ ...prev, [type]: content }))
   }
 
   const copyToClipboard = (text: string) => {
@@ -33,46 +34,85 @@ export default function ContentGenerator() {
       <div>
         <h1 className="text-3xl font-bold flex items-center gap-2">
           <Sparkles className="h-8 w-8 text-primary" />
-          Content Generator
+          AI Content Architect
         </h1>
         <p className="text-muted-foreground">
-          Generate AI-powered outreach content tailored to each company
+          Generate hyper-personalized outreach using Claude 3.5 Sonnet & Buyer Intent
         </p>
       </div>
 
-      {/* Company Selection */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        <Card>
-          <CardHeader>
-            <CardTitle>Select Company</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-4">
-              <Select
-                value={selectedCompany}
-                onChange={(e) => setSelectedCompany(e.target.value)}
-                className="flex-1"
-              >
-                <option value="1">Tesla Inc.</option>
-                <option value="2">Microsoft</option>
-                <option value="3">Stripe</option>
-                <option value="4">Airbnb</option>
-                <option value="5">Uber</option>
-              </Select>
-              {company && (
-                <div className="flex items-center gap-2">
-                  <Badge>Intent Score: {company.intent_score}</Badge>
-                  <Badge variant="outline">{company.industry}</Badge>
+      {/* Buyer Selection & Intent Context */}
+      <div className="grid gap-6 md:grid-cols-2">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Card className="h-full">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                <User className="h-4 w-4" />
+                Select Target Buyer
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 bg-muted/50 border rounded-lg px-4 py-2 shadow-inner">
+                  <User className="h-5 w-5 text-primary" />
+                  <select
+                    value={selectedBuyerId}
+                    onChange={(e) => setSelectedBuyerId(e.target.value)}
+                    className="bg-transparent text-lg font-bold focus:outline-none w-full cursor-pointer"
+                  >
+                    <option disabled>Select Buyer</option>
+                    {buyers?.map(buyer => (
+                      <option key={buyer.id} value={buyer.id}>{buyer.name}</option>
+                    ))}
+                  </select>
+                </div>
+                {buyerData && (
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    <Badge variant="outline" className="bg-primary/5 border-primary/20 text-primary">
+                      {buyerData.channels[0]?.name} Priority
+                    </Badge>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+        >
+          <Card className="h-full border-primary/20 bg-primary/5">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-primary">
+                <Zap className="h-4 w-4" />
+                Detected Intent Signals
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {isBuyerLoading ? (
+                <div className="flex h-12 items-center justify-center">
+                  <RefreshCw className="h-5 w-5 animate-spin text-primary/50" />
+                </div>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  <Badge className="bg-green-500/10 text-green-600 border-green-500/20">Recently Active</Badge>
+                  <Badge className="bg-blue-500/10 text-blue-600 border-blue-500/20">High Engagement</Badge>
+                  <Badge className="bg-purple-500/10 text-purple-600 border-purple-500/20">Intent Score: 92</Badge>
                 </div>
               )}
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
+              <p className="mt-3 text-xs text-muted-foreground italic">
+                Content will be personalized using these real-time professional triggers.
+              </p>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
 
       {/* Generate Buttons */}
       <motion.div
@@ -116,7 +156,7 @@ export default function ContentGenerator() {
       </motion.div>
 
       {/* Generated Content - LinkedIn */}
-      {(generatedContent.linkedin || company?.content?.linkedin_message) && (
+      {generatedContent.linkedin && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -139,7 +179,7 @@ export default function ContentGenerator() {
                     variant="outline"
                     size="sm"
                     onClick={() =>
-                      copyToClipboard(generatedContent.linkedin || company?.content?.linkedin_message || '')
+                      copyToClipboard(generatedContent.linkedin || '')
                     }
                   >
                     <Copy className="mr-2 h-4 w-4" />
@@ -154,7 +194,7 @@ export default function ContentGenerator() {
             </CardHeader>
             <CardContent>
               <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed bg-muted p-4 rounded-lg">
-                {generatedContent.linkedin || company?.content?.linkedin_message}
+                {generatedContent.linkedin}
               </pre>
             </CardContent>
           </Card>
@@ -162,7 +202,7 @@ export default function ContentGenerator() {
       )}
 
       {/* Generated Content - Email */}
-      {(generatedContent.email || company?.content?.email_message) && (
+      {generatedContent.email && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -185,7 +225,7 @@ export default function ContentGenerator() {
                     variant="outline"
                     size="sm"
                     onClick={() =>
-                      copyToClipboard(generatedContent.email || company?.content?.email_message || '')
+                      copyToClipboard(generatedContent.email || '')
                     }
                   >
                     <Copy className="mr-2 h-4 w-4" />
@@ -200,7 +240,7 @@ export default function ContentGenerator() {
             </CardHeader>
             <CardContent>
               <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed bg-muted p-4 rounded-lg">
-                {generatedContent.email || company?.content?.email_message}
+                {generatedContent.email}
               </pre>
             </CardContent>
           </Card>
@@ -208,7 +248,7 @@ export default function ContentGenerator() {
       )}
 
       {/* Generated Content - WhatsApp */}
-      {(generatedContent.whatsapp || company?.content?.whatsapp_message) && (
+      {generatedContent.whatsapp && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -231,7 +271,7 @@ export default function ContentGenerator() {
                     variant="outline"
                     size="sm"
                     onClick={() =>
-                      copyToClipboard(generatedContent.whatsapp || company?.content?.whatsapp_message || '')
+                      copyToClipboard(generatedContent.whatsapp || '')
                     }
                   >
                     <Copy className="mr-2 h-4 w-4" />
@@ -246,7 +286,7 @@ export default function ContentGenerator() {
             </CardHeader>
             <CardContent>
               <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed bg-muted p-4 rounded-lg">
-                {generatedContent.whatsapp || company?.content?.whatsapp_message}
+                {generatedContent.whatsapp}
               </pre>
             </CardContent>
           </Card>

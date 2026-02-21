@@ -611,35 +611,39 @@ export const mockSearchResults: Record<string, any[]> = {
 
 // Mock Buyers for Outreach Visualization
 export const mockBuyers: Buyer[] = [
-  { id: 'BUY_57096', name: 'Buyer 57096' },
-  { id: 'BUY_18472', name: 'Buyer 18472' },
-  { id: 'BUY_86677', name: 'Buyer 86677' },
-  { id: 'BUY_43385', name: 'Buyer 43385' },
-  { id: 'BUY_36015', name: 'Buyer 36015' },
-  { id: 'BUY_59504', name: 'Buyer 59504' },
-  { id: 'BUY_73568', name: 'Buyer 73568' },
-  { id: 'BUY_35716', name: 'Buyer 35716' },
-  { id: 'BUY_70104', name: 'Buyer 70104' },
-  { id: 'BUY_21806', name: 'Buyer 21806' },
-  { id: 'BUY_18677', name: 'Buyer 18677' },
-  { id: 'BUY_68002', name: 'Buyer 68002' },
-  { id: 'BUY_68164', name: 'Buyer 68164' },
-  { id: 'BUY_99543', name: 'Buyer 99543' },
-  { id: 'BUY_64874', name: 'Buyer 64874' },
-  { id: 'BUY_36727', name: 'Buyer 36727' },
-  { id: 'BUY_98156', name: 'Buyer 98156' },
-  { id: 'BUY_23878', name: 'Buyer 23878' },
-  { id: 'BUY_77508', name: 'Buyer 77508' },
-  { id: 'BUY_72750', name: 'Buyer 72750' },
-  { id: 'BUY_77149', name: 'Buyer 77149' },
-  { id: 'BUY_42262', name: 'Buyer 42262' },
-  { id: 'BUY_78426', name: 'Buyer 78426' },
-  { id: 'BUY_77709', name: 'Buyer 77709' },
+  { id: 'BUY_57096', name: 'Buyer 57096', industry: 'Chemicals' },
+  { id: 'BUY_18472', name: 'Buyer 18472', industry: 'Software' },
+  { id: 'BUY_86677', name: 'Buyer 86677', industry: 'Finance' },
+  { id: 'BUY_43385', name: 'Buyer 43385', industry: 'Retail' },
+  { id: 'BUY_36015', name: 'Buyer 36015', industry: 'Education' },
+  { id: 'BUY_59504', name: 'Buyer 59504', industry: 'Healthcare' },
+  { id: 'BUY_73568', name: 'Buyer 73568', industry: 'Construction' },
+  { id: 'BUY_35716', name: 'Buyer 35716', industry: 'Energy' },
+  { id: 'BUY_70104', name: 'Buyer 70104', industry: 'Telecom' },
+  { id: 'BUY_21806', name: 'Buyer 21806', industry: 'Automotive' },
+  { id: 'BUY_18677', name: 'Buyer 18677', industry: 'Food & Beverage' },
+  { id: 'BUY_68002', name: 'Buyer 68002', industry: 'Logistics' },
+  { id: 'BUY_68164', name: 'Buyer 68164', industry: 'Pharma' },
+  { id: 'BUY_99543', name: 'Buyer 99543', industry: 'Technology' },
+  { id: 'BUY_64874', name: 'Buyer 64874', industry: 'Aerospace' },
+  { id: 'BUY_36727', name: 'Buyer 36727', industry: 'Hospitality' },
+  { id: 'BUY_98156', name: 'Buyer 98156', industry: 'Apparel' },
+  { id: 'BUY_23878', name: 'Buyer 23878', industry: 'Legal' },
+  { id: 'BUY_77508', name: 'Buyer 77508', industry: 'Media' },
+  { id: 'BUY_72750', name: 'Buyer 72750', industry: 'Public Sector' },
+  { id: 'BUY_77149', name: 'Buyer 77149', industry: 'Mining' },
+  { id: 'BUY_42262', name: 'Buyer 42262', industry: 'Real Estate' },
+  { id: 'BUY_78426', name: 'Buyer 78426', industry: 'Travel' },
+  { id: 'BUY_77709', name: 'Buyer 77709', industry: 'Wholesale' },
 ]
 
 export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
   'BUY_57096': {
     buyer_id: 'BUY_57096',
+    intent_score: 92,
+    linkedin_engagement: 0.94,
+    groups: 'Global MSME Alliance',
+    previous_channel: 'Email',
     channels: [
       { name: 'Email', value: 95, color: '#ea4335' },
       { name: 'LinkedIn', value: 94, color: '#0077b5' },
@@ -647,6 +651,9 @@ export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
   },
   'BUY_18472': {
     buyer_id: 'BUY_18472',
+    intent_score: 85,
+    linkedin_engagement: 0.67,
+    previous_channel: 'Email',
     channels: [
       { name: 'Email', value: 86, color: '#ea4335' },
       { name: 'LinkedIn', value: 67, color: '#0077b5' },
@@ -654,6 +661,9 @@ export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
   },
   'BUY_86677': {
     buyer_id: 'BUY_86677',
+    intent_score: 75,
+    linkedin_engagement: 0.59,
+    previous_channel: 'LinkedIn',
     channels: [
       { name: 'LinkedIn', value: 59, color: '#0077b5' },
       { name: 'Email', value: 45, color: '#ea4335' },
@@ -661,6 +671,9 @@ export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
   },
   'BUY_43385': {
     buyer_id: 'BUY_43385',
+    intent_score: 82,
+    linkedin_engagement: 0.69,
+    previous_channel: 'SMS',
     channels: [
       { name: 'SMS', value: 88, color: '#10b981' },
       { name: 'LinkedIn', value: 69, color: '#0077b5' },
@@ -668,6 +681,9 @@ export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
   },
   'BUY_36015': {
     buyer_id: 'BUY_36015',
+    intent_score: 95,
+    linkedin_engagement: 0.27,
+    previous_channel: 'WhatsApp',
     channels: [
       { name: 'WhatsApp', value: 95, color: '#25D366' },
       { name: 'Email', value: 27, color: '#ea4335' },
@@ -675,6 +691,9 @@ export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
   },
   'BUY_59504': {
     buyer_id: 'BUY_59504',
+    intent_score: 88,
+    linkedin_engagement: 0.73,
+    previous_channel: 'Call',
     channels: [
       { name: 'Call', value: 93, color: '#3b82f6' },
       { name: 'Email', value: 73, color: '#ea4335' },
@@ -682,6 +701,9 @@ export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
   },
   'BUY_73568': {
     buyer_id: 'BUY_73568',
+    intent_score: 56,
+    linkedin_engagement: 0.43,
+    previous_channel: 'Email',
     channels: [
       { name: 'Email', value: 56, color: '#ea4335' },
       { name: 'LinkedIn', value: 43, color: '#0077b5' },
@@ -689,6 +711,9 @@ export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
   },
   'BUY_35716': {
     buyer_id: 'BUY_35716',
+    intent_score: 71,
+    linkedin_engagement: 0.49,
+    previous_channel: 'WhatsApp',
     channels: [
       { name: 'WhatsApp', value: 71, color: '#25D366' },
       { name: 'Email', value: 49, color: '#ea4335' },
@@ -696,6 +721,9 @@ export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
   },
   'BUY_70104': {
     buyer_id: 'BUY_70104',
+    intent_score: 99,
+    linkedin_engagement: 0.37,
+    previous_channel: 'WhatsApp',
     channels: [
       { name: 'WhatsApp', value: 99, color: '#25D366' },
       { name: 'LinkedIn', value: 37, color: '#0077b5' },
@@ -703,6 +731,9 @@ export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
   },
   'BUY_21806': {
     buyer_id: 'BUY_21806',
+    intent_score: 89,
+    linkedin_engagement: 0.31,
+    previous_channel: 'Email',
     channels: [
       { name: 'Email', value: 89, color: '#ea4335' },
       { name: 'LinkedIn', value: 31, color: '#0077b5' },
@@ -710,6 +741,9 @@ export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
   },
   'BUY_18677': {
     buyer_id: 'BUY_18677',
+    intent_score: 83,
+    linkedin_engagement: 0.54,
+    previous_channel: 'LinkedIn',
     channels: [
       { name: 'LinkedIn', value: 83, color: '#0077b5' },
       { name: 'WhatsApp', value: 54, color: '#25D366' },
@@ -717,6 +751,9 @@ export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
   },
   'BUY_68002': {
     buyer_id: 'BUY_68002',
+    intent_score: 88,
+    linkedin_engagement: 0.83,
+    previous_channel: 'LinkedIn',
     channels: [
       { name: 'LinkedIn', value: 88, color: '#0077b5' },
       { name: 'Call', value: 83, color: '#3b82f6' },
@@ -724,6 +761,9 @@ export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
   },
   'BUY_68164': {
     buyer_id: 'BUY_68164',
+    intent_score: 84,
+    linkedin_engagement: 0.72,
+    previous_channel: 'LinkedIn',
     channels: [
       { name: 'LinkedIn', value: 84, color: '#0077b5' },
       { name: 'Call', value: 72, color: '#3b82f6' },
@@ -731,6 +771,9 @@ export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
   },
   'BUY_99543': {
     buyer_id: 'BUY_99543',
+    intent_score: 58,
+    linkedin_engagement: 0.43,
+    previous_channel: 'Call',
     channels: [
       { name: 'Call', value: 58, color: '#3b82f6' },
       { name: 'LinkedIn', value: 43, color: '#0077b5' },
@@ -738,6 +781,9 @@ export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
   },
   'BUY_64874': {
     buyer_id: 'BUY_64874',
+    intent_score: 45,
+    linkedin_engagement: 0.36,
+    previous_channel: 'LinkedIn',
     channels: [
       { name: 'LinkedIn', value: 45, color: '#0077b5' },
       { name: 'Email', value: 36, color: '#ea4335' },
@@ -745,6 +791,9 @@ export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
   },
   'BUY_36727': {
     buyer_id: 'BUY_36727',
+    intent_score: 66,
+    linkedin_engagement: 0.45,
+    previous_channel: 'WhatsApp',
     channels: [
       { name: 'WhatsApp', value: 66, color: '#25D366' },
       { name: 'LinkedIn', value: 45, color: '#0077b5' },
@@ -752,6 +801,9 @@ export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
   },
   'BUY_98156': {
     buyer_id: 'BUY_98156',
+    intent_score: 86,
+    linkedin_engagement: 0.72,
+    previous_channel: 'LinkedIn',
     channels: [
       { name: 'LinkedIn', value: 86, color: '#0077b5' },
       { name: 'Call', value: 72, color: '#3b82f6' },
@@ -759,6 +811,9 @@ export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
   },
   'BUY_23878': {
     buyer_id: 'BUY_23878',
+    intent_score: 99,
+    linkedin_engagement: 0.87,
+    previous_channel: 'Email',
     channels: [
       { name: 'Email', value: 99, color: '#ea4335' },
       { name: 'LinkedIn', value: 87, color: '#0077b5' },
@@ -766,6 +821,9 @@ export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
   },
   'BUY_77508': {
     buyer_id: 'BUY_77508',
+    intent_score: 61,
+    linkedin_engagement: 0.39,
+    previous_channel: 'LinkedIn',
     channels: [
       { name: 'LinkedIn', value: 61, color: '#0077b5' },
       { name: 'WhatsApp', value: 39, color: '#25D366' },
@@ -773,6 +831,9 @@ export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
   },
   'BUY_72750': {
     buyer_id: 'BUY_72750',
+    intent_score: 77,
+    linkedin_engagement: 0.69,
+    previous_channel: 'Call',
     channels: [
       { name: 'Call', value: 77, color: '#3b82f6' },
       { name: 'LinkedIn', value: 69, color: '#0077b5' },
@@ -780,6 +841,9 @@ export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
   },
   'BUY_77149': {
     buyer_id: 'BUY_77149',
+    intent_score: 65,
+    linkedin_engagement: 0.50,
+    previous_channel: 'WhatsApp',
     channels: [
       { name: 'WhatsApp', value: 65, color: '#25D366' },
       { name: 'LinkedIn', value: 50, color: '#0077b5' },
@@ -787,6 +851,9 @@ export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
   },
   'BUY_42262': {
     buyer_id: 'BUY_42262',
+    intent_score: 86,
+    linkedin_engagement: 0.58,
+    previous_channel: 'Call',
     channels: [
       { name: 'Call', value: 86, color: '#3b82f6' },
       { name: 'SMS', value: 58, color: '#10b981' },
@@ -794,6 +861,9 @@ export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
   },
   'BUY_78426': {
     buyer_id: 'BUY_78426',
+    intent_score: 83,
+    linkedin_engagement: 0.78,
+    previous_channel: 'LinkedIn',
     channels: [
       { name: 'LinkedIn', value: 83, color: '#0077b5' },
       { name: 'WhatsApp', value: 78, color: '#25D366' },
@@ -801,6 +871,9 @@ export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
   },
   'BUY_77709': {
     buyer_id: 'BUY_77709',
+    intent_score: 80,
+    linkedin_engagement: 0.64,
+    previous_channel: 'Email',
     channels: [
       { name: 'Email', value: 80, color: '#ea4335' },
       { name: 'LinkedIn', value: 64, color: '#0077b5' },

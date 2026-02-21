@@ -22,6 +22,8 @@ const api = axios.create({
   },
 })
 
+const SUPABASE_FUNCTION_URL = 'https://bemxpoldmjcevaqmeuep.supabase.co/functions/v1'
+
 // Request interceptor
 api.interceptors.request.use(
   (config) => {
@@ -104,14 +106,25 @@ export const simulateWorkflow = async (workflowId: string): Promise<{ status: st
 
 // Content Generator APIs
 export const generateContent = async (
-  companyId: string,
+  buyerId: string,
   type: 'linkedin' | 'email' | 'whatsapp'
 ): Promise<{ content: string }> => {
-  const response = await api.post<ApiResponse<{ content: string }>>(
-    `/content/generate`,
-    { company_id: companyId, type }
-  )
-  return response.data.data
+  // Try to call the real Supabase Edge Function
+  try {
+    const response = await axios.post<{ content: string }>(
+      `${SUPABASE_FUNCTION_URL}/generate-content`,
+      { buyer_id: buyerId, type },
+      { headers: { 'Content-Type': 'application/json' } }
+    )
+    return response.data
+  } catch (error) {
+    console.warn('Real AI generation failed, falling back to mock endpoint:', error)
+    const response = await api.post<ApiResponse<{ content: string }>>(
+      `/content/generate`,
+      { buyer_id: buyerId, type }
+    )
+    return response.data.data
+  }
 }
 
 // Conversation APIs
