@@ -8,7 +8,6 @@ import {
   Radio,
   MessageSquare,
   BarChart3,
-  Settings,
   ChevronLeft,
   Calendar,
 } from 'lucide-react'
@@ -25,7 +24,6 @@ const navigation = [
   { name: 'Signal Monitor', href: '/signals', icon: Radio },
   { name: 'Conversations', href: '/conversations', icon: MessageSquare },
   { name: 'Analytics', href: '/analytics', icon: BarChart3 },
-  { name: 'Settings', href: '/settings', icon: Settings },
 ]
 
 export default function Sidebar() {
@@ -49,14 +47,14 @@ export default function Sidebar() {
         <div className="flex h-full w-64 flex-col">
           {/* Logo */}
           <div className="flex h-16 items-center justify-between border-b border-border px-6">
-            <div className="flex items-center gap-3">
+            <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
               <img
                 src={logoSrc}
                 alt="PolyDeal Logo"
                 className="h-10 w-10 object-contain"
               />
               <span className="text-lg font-semibold">PolyDeal</span>
-            </div>
+            </Link>
             <button
               onClick={toggleSidebar}
               className="rounded-lg p-1 hover:bg-accent lg:hidden"

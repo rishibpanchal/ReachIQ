@@ -1,5 +1,6 @@
 import { Menu, Bell, HelpCircle, Sun, Moon } from 'lucide-react'
 import { SignedIn, UserButton } from '@clerk/clerk-react'
+import { Link } from 'react-router-dom'
 import { useUIStore } from '@/store'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -31,11 +32,13 @@ export default function Navbar() {
           </Button>
         )}
         {!sidebarOpen && (
-          <img
-            src={logoSrc}
-            alt="PolyDeal Logo"
-            className="h-8 w-8 object-contain"
-          />
+          <Link to="/" className="hover:opacity-80 transition-opacity">
+            <img
+              src={logoSrc}
+              alt="PolyDeal Logo"
+              className="h-8 w-8 object-contain"
+            />
+          </Link>
         )}
       </div>
 
