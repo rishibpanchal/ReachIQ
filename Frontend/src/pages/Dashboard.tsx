@@ -71,6 +71,61 @@ export default function Dashboard() {
         />
       </div>
 
+      {/* Upcoming Meetings */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.35 }}
+      >
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-xl font-bold">
+              Upcoming Meetings
+              <Badge variant="outline" className="ml-2 bg-primary/5 text-primary border-primary/20">
+                {stats.upcoming_meetings.length} scheduled
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {stats.upcoming_meetings.map((meeting) => (
+                <Card key={meeting.id} className="bg-accent/30 border-none shadow-none hover:bg-accent/50 transition-colors cursor-pointer">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-bold text-sm tracking-tight">{meeting.company_name}</span>
+                      <Badge
+                        variant={meeting.status === 'Confirmed' ? 'default' : 'secondary'}
+                        className={`text-[10px] px-1.5 py-0.5 rounded-sm uppercase tracking-wider ${meeting.status === 'Confirmed' ? 'bg-green-500/20 text-green-700 hover:bg-green-500/20' : 'bg-yellow-500/20 text-yellow-700 hover:bg-yellow-500/20'
+                          }`}
+                      >
+                        {meeting.status}
+                      </Badge>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-muted-foreground">Attendee:</span>
+                        <span className="font-medium">{meeting.contact_name}</span>
+                      </div>
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-muted-foreground">Type:</span>
+                        <span className="text-primary font-semibold">{meeting.type}</span>
+                      </div>
+                      <div className="pt-2 border-t border-accent/50 flex items-center justify-between text-[11px]">
+                        <span className="text-muted-foreground font-medium">
+                          {new Date(meeting.time).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
+                        </span>
+                        <span className="text-foreground font-bold italic">
+                          {new Date(meeting.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} ({meeting.duration})
+                        </span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
       {/* Charts */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <motion.div
@@ -143,6 +198,6 @@ export default function Dashboard() {
           </CardContent>
         </Card>
       </motion.div>
-    </div>
+    </div >
   )
 }

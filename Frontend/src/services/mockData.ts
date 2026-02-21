@@ -74,6 +74,35 @@ export const mockDashboardStats: DashboardStats = {
       last_signal: '1 day ago',
     },
   ],
+  upcoming_meetings: [
+    {
+      id: 'm1',
+      company_name: 'Tesla Inc.',
+      contact_name: 'John Doe',
+      time: '2026-02-22T10:00:00Z',
+      duration: '45 min',
+      type: 'Video',
+      status: 'Confirmed',
+    },
+    {
+      id: 'm2',
+      company_name: 'Stripe',
+      contact_name: 'Sarah Smith',
+      time: '2026-02-22T14:30:00Z',
+      duration: '30 min',
+      type: 'Call',
+      status: 'Confirmed',
+    },
+    {
+      id: 'm3',
+      company_name: 'Microsoft',
+      contact_name: 'Michael Brown',
+      time: '2026-02-23T09:00:00Z',
+      duration: '60 min',
+      type: 'Video',
+      status: 'Pending',
+    },
+  ],
 }
 
 // Mock Companies

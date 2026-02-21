@@ -93,6 +93,16 @@ export interface Message {
   status?: 'sent' | 'delivered' | 'read'
 }
 
+export interface Meeting {
+  id: string
+  company_name: string
+  contact_name: string
+  time: string
+  duration: string
+  type: 'Video' | 'Call' | 'In-person'
+  status: 'Confirmed' | 'Pending' | 'Rescheduled'
+}
+
 export interface DashboardStats {
   total_companies: number
   high_intent_companies: number
@@ -102,6 +112,7 @@ export interface DashboardStats {
   channel_effectiveness: ChannelEffectiveness[]
   success_rate_trend: SuccessRateTrend[]
   recent_companies: Company[]
+  upcoming_meetings: Meeting[]
 }
 
 export interface IntentDistribution {
