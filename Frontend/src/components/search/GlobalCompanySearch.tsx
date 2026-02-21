@@ -52,6 +52,13 @@ export default function GlobalCompanySearch() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
+  const handleSelectCompany = useCallback((companyId: string) => {
+    navigate(`/companies/${companyId}`)
+    setQuery('')
+    setIsOpen(false)
+    inputRef.current?.blur()
+  }, [navigate])
+
   // Handle keyboard navigation
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -79,15 +86,8 @@ export default function GlobalCompanySearch() {
           break
       }
     },
-    [isOpen, results, selectedIndex]
+    [isOpen, results, selectedIndex, handleSelectCompany]
   )
-
-  const handleSelectCompany = (companyId: string) => {
-    navigate(`/companies/${companyId}`)
-    setQuery('')
-    setIsOpen(false)
-    inputRef.current?.blur()
-  }
 
   const handleClear = () => {
     setQuery('')
@@ -123,7 +123,7 @@ export default function GlobalCompanySearch() {
             <X className="h-5 w-5" />
           </button>
         )}
-        
+
         {/* Loading indicator */}
         {isLoading && (
           <div className="absolute right-12 top-1/2 -translate-y-1/2">
@@ -153,7 +153,7 @@ export default function GlobalCompanySearch() {
                 />
               ))}
             </div>
-            
+
             {/* Footer hint */}
             <div className="px-4 py-3 bg-muted/30 text-xs text-muted-foreground border-t border-border/30 flex items-center justify-between">
               <span>Use ↑↓ to navigate, Enter to select, Esc to close</span>

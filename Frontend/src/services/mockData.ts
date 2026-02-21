@@ -448,6 +448,7 @@ export const mockConversations: Conversation[] = [
 ]
 
 // Mock Company Analytics
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const mockCompanyAnalytics: Record<string, any> = {
   '1': {
     company: {
@@ -528,6 +529,7 @@ export const mockCompanyAnalytics: Record<string, any> = {
 }
 
 // Mock Company News
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const mockCompanyNews: Record<string, any[]> = {
   '1': [
     {
@@ -592,6 +594,7 @@ export const mockCompanyNews: Record<string, any[]> = {
 }
 
 // Mock Search Results
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const mockSearchResults: Record<string, any[]> = {
   tesla: [
     { id: '1', name: 'Tesla Inc.', industry: 'Automotive', intent_score: 92, location: 'Palo Alto, CA' },
