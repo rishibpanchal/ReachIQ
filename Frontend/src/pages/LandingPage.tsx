@@ -1,11 +1,22 @@
 import { Link } from 'react-router-dom'
+import { useUIStore } from '@/store'
 
 export default function LandingPage() {
+  const { theme } = useUIStore()
+  const logoSrc = theme === 'dark' ? '/polydeal_logo_dark.png' : '/polydeal_logo_light.png'
+
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.15),_transparent_55%),radial-gradient(circle_at_bottom,_rgba(14,165,233,0.18),_transparent_60%)] bg-slate-950 text-slate-100">
       <div className="mx-auto flex min-h-screen max-w-6xl flex-col justify-center px-6 py-16">
-        <p className="text-sm uppercase tracking-[0.35em] text-emerald-300/80">PolyDeal</p>
-        <h1 className="mt-6 text-4xl font-semibold tracking-tight sm:text-5xl">
+        <div className="flex items-center gap-3 mb-4">
+          <img
+            src={logoSrc}
+            alt="PolyDeal Logo"
+            className="h-12 w-12 object-contain"
+          />
+          <p className="text-sm uppercase tracking-[0.35em] text-emerald-300/80">PolyDeal</p>
+        </div>
+        <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
           Deal intelligence, engineered for clarity.
         </h1>
         <p className="mt-4 max-w-2xl text-base text-slate-300 sm:text-lg">
