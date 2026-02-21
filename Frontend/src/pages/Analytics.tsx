@@ -157,7 +157,7 @@ export default function Analytics() {
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-32 bg-muted rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-primary"
+                          className="h-full bg1.0imary"
                           style={{ width: `${85 - index * 10}%` }}
                         />
                       </div>

@@ -18,5 +18,8 @@ export { default as ChannelBarChart } from './charts/ChannelBarChart'
 export { default as SuccessLineChart } from './charts/SuccessLineChart'
 export { default as GaugeChart } from './charts/GaugeChart'
 
+// Analytics Components
+export { default as GrowthCurvePrediction } from './analytics/GrowthCurvePrediction'
+
 // Card Components
 export { default as StatCard } from './cards/StatCard'

@@ -25,6 +25,7 @@ import { useBuyers, useBuyerOutreachData } from '@/hooks/useApi'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Select } from '@/components/ui/select'
+import GrowthCurvePrediction from '@/components/analytics/GrowthCurvePrediction'
 
 const nodeColor = (status: string) => {
   switch (status) {
@@ -338,6 +339,16 @@ export default function Workflow() {
             </div>
           </CardContent>
         </Card>
+      </motion.div>
+
+      {/* Growth Curve Prediction - Dynamic per Buyer */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.3 }}
+        className="mt-6"
+      >
+        <GrowthCurvePrediction companyId={selectedBuyerId} />
       </motion.div>
     </div>
   )
