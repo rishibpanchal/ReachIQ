@@ -200,3 +200,17 @@ export interface SearchResult {
   intent_score: number
   location: string
 }
+
+export interface Buyer {
+  id: string
+  name: string
+}
+
+export interface BuyerOutreachData {
+  buyer_id: string
+  channels: {
+    name: string
+    value: number
+    color: string
+  }[]
+}

@@ -10,6 +10,8 @@ import type {
   CompanyAnalytics,
   NewsItem,
   SearchResult,
+  Buyer,
+  BuyerOutreachData,
 } from '@/types'
 
 const api = axios.create({
@@ -149,6 +151,17 @@ export const searchCompanies = async (query: string): Promise<SearchResult[]> =>
   const response = await api.get<ApiResponse<SearchResult[]>>('/companies/search', {
     params: { q: query }
   })
+  return response.data.data
+}
+
+// Buyer Outreach APIs
+export const getBuyers = async (): Promise<Buyer[]> => {
+  const response = await api.get<ApiResponse<Buyer[]>>('/buyers')
+  return response.data.data
+}
+
+export const getBuyerOutreachData = async (buyerId: string): Promise<BuyerOutreachData> => {
+  const response = await api.get<ApiResponse<BuyerOutreachData>>(`/buyers/${buyerId}/outreach`)
   return response.data.data
 }
 

@@ -10,6 +10,8 @@ import {
   mockCompanyAnalytics,
   mockCompanyNews,
   mockSearchResults,
+  mockBuyers,
+  mockBuyerOutreachData,
 } from '@/services/mockData'
 
 // Flag to use mock data when API is not available
@@ -200,5 +202,31 @@ export const useSearchCompanies = (query: string, enabled: boolean = true) => {
       return api.searchCompanies(query)
     },
     enabled: enabled && query.length > 0,
+  })
+}
+
+// Buyer Hooks
+export const useBuyers = () => {
+  return useQuery({
+    queryKey: ['buyers'],
+    queryFn: async () => {
+      if (USE_MOCK_DATA) {
+        return mockBuyers
+      }
+      return api.getBuyers()
+    },
+  })
+}
+
+export const useBuyerOutreachData = (buyerId: string) => {
+  return useQuery({
+    queryKey: ['buyerOutreach', buyerId],
+    queryFn: async () => {
+      if (USE_MOCK_DATA) {
+        return mockBuyerOutreachData[buyerId] || mockBuyerOutreachData['BUY_57096']
+      }
+      return api.getBuyerOutreachData(buyerId)
+    },
+    enabled: !!buyerId,
   })
 }

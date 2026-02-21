@@ -4,7 +4,8 @@ import type {
   Signal,
   Workflow,
   Conversation,
-  Message,
+  Buyer,
+  BuyerOutreachData,
 } from '@/types'
 
 // Mock Dashboard Stats
@@ -606,4 +607,203 @@ export const mockSearchResults: Record<string, any[]> = {
     { id: '2', name: 'OpenAI', industry: 'Artificial Intelligence', intent_score: 85, location: 'San Francisco, CA' },
     { id: '3', name: 'Stripe', industry: 'Financial Technology', intent_score: 78, location: 'San Francisco, CA' },
   ],
+}
+
+// Mock Buyers for Outreach Visualization
+export const mockBuyers: Buyer[] = [
+  { id: 'BUY_57096', name: 'Buyer 57096' },
+  { id: 'BUY_18472', name: 'Buyer 18472' },
+  { id: 'BUY_86677', name: 'Buyer 86677' },
+  { id: 'BUY_43385', name: 'Buyer 43385' },
+  { id: 'BUY_36015', name: 'Buyer 36015' },
+  { id: 'BUY_59504', name: 'Buyer 59504' },
+  { id: 'BUY_73568', name: 'Buyer 73568' },
+  { id: 'BUY_35716', name: 'Buyer 35716' },
+  { id: 'BUY_70104', name: 'Buyer 70104' },
+  { id: 'BUY_21806', name: 'Buyer 21806' },
+  { id: 'BUY_18677', name: 'Buyer 18677' },
+  { id: 'BUY_68002', name: 'Buyer 68002' },
+  { id: 'BUY_68164', name: 'Buyer 68164' },
+  { id: 'BUY_99543', name: 'Buyer 99543' },
+  { id: 'BUY_64874', name: 'Buyer 64874' },
+  { id: 'BUY_36727', name: 'Buyer 36727' },
+  { id: 'BUY_98156', name: 'Buyer 98156' },
+  { id: 'BUY_23878', name: 'Buyer 23878' },
+  { id: 'BUY_77508', name: 'Buyer 77508' },
+  { id: 'BUY_72750', name: 'Buyer 72750' },
+  { id: 'BUY_77149', name: 'Buyer 77149' },
+  { id: 'BUY_42262', name: 'Buyer 42262' },
+  { id: 'BUY_78426', name: 'Buyer 78426' },
+  { id: 'BUY_77709', name: 'Buyer 77709' },
+]
+
+export const mockBuyerOutreachData: Record<string, BuyerOutreachData> = {
+  'BUY_57096': {
+    buyer_id: 'BUY_57096',
+    channels: [
+      { name: 'Email', value: 95, color: '#ea4335' },
+      { name: 'LinkedIn', value: 94, color: '#0077b5' },
+    ],
+  },
+  'BUY_18472': {
+    buyer_id: 'BUY_18472',
+    channels: [
+      { name: 'Email', value: 86, color: '#ea4335' },
+      { name: 'LinkedIn', value: 67, color: '#0077b5' },
+    ],
+  },
+  'BUY_86677': {
+    buyer_id: 'BUY_86677',
+    channels: [
+      { name: 'LinkedIn', value: 59, color: '#0077b5' },
+      { name: 'Email', value: 45, color: '#ea4335' },
+    ],
+  },
+  'BUY_43385': {
+    buyer_id: 'BUY_43385',
+    channels: [
+      { name: 'SMS', value: 88, color: '#10b981' },
+      { name: 'LinkedIn', value: 69, color: '#0077b5' },
+    ],
+  },
+  'BUY_36015': {
+    buyer_id: 'BUY_36015',
+    channels: [
+      { name: 'WhatsApp', value: 95, color: '#25D366' },
+      { name: 'Email', value: 27, color: '#ea4335' },
+    ],
+  },
+  'BUY_59504': {
+    buyer_id: 'BUY_59504',
+    channels: [
+      { name: 'Call', value: 93, color: '#3b82f6' },
+      { name: 'Email', value: 73, color: '#ea4335' },
+    ],
+  },
+  'BUY_73568': {
+    buyer_id: 'BUY_73568',
+    channels: [
+      { name: 'Email', value: 56, color: '#ea4335' },
+      { name: 'LinkedIn', value: 43, color: '#0077b5' },
+    ],
+  },
+  'BUY_35716': {
+    buyer_id: 'BUY_35716',
+    channels: [
+      { name: 'WhatsApp', value: 71, color: '#25D366' },
+      { name: 'Email', value: 49, color: '#ea4335' },
+    ],
+  },
+  'BUY_70104': {
+    buyer_id: 'BUY_70104',
+    channels: [
+      { name: 'WhatsApp', value: 99, color: '#25D366' },
+      { name: 'LinkedIn', value: 37, color: '#0077b5' },
+    ],
+  },
+  'BUY_21806': {
+    buyer_id: 'BUY_21806',
+    channels: [
+      { name: 'Email', value: 89, color: '#ea4335' },
+      { name: 'LinkedIn', value: 31, color: '#0077b5' },
+    ],
+  },
+  'BUY_18677': {
+    buyer_id: 'BUY_18677',
+    channels: [
+      { name: 'LinkedIn', value: 83, color: '#0077b5' },
+      { name: 'WhatsApp', value: 54, color: '#25D366' },
+    ],
+  },
+  'BUY_68002': {
+    buyer_id: 'BUY_68002',
+    channels: [
+      { name: 'LinkedIn', value: 88, color: '#0077b5' },
+      { name: 'Call', value: 83, color: '#3b82f6' },
+    ],
+  },
+  'BUY_68164': {
+    buyer_id: 'BUY_68164',
+    channels: [
+      { name: 'LinkedIn', value: 84, color: '#0077b5' },
+      { name: 'Call', value: 72, color: '#3b82f6' },
+    ],
+  },
+  'BUY_99543': {
+    buyer_id: 'BUY_99543',
+    channels: [
+      { name: 'Call', value: 58, color: '#3b82f6' },
+      { name: 'LinkedIn', value: 43, color: '#0077b5' },
+    ],
+  },
+  'BUY_64874': {
+    buyer_id: 'BUY_64874',
+    channels: [
+      { name: 'LinkedIn', value: 45, color: '#0077b5' },
+      { name: 'Email', value: 36, color: '#ea4335' },
+    ],
+  },
+  'BUY_36727': {
+    buyer_id: 'BUY_36727',
+    channels: [
+      { name: 'WhatsApp', value: 66, color: '#25D366' },
+      { name: 'LinkedIn', value: 45, color: '#0077b5' },
+    ],
+  },
+  'BUY_98156': {
+    buyer_id: 'BUY_98156',
+    channels: [
+      { name: 'LinkedIn', value: 86, color: '#0077b5' },
+      { name: 'Call', value: 72, color: '#3b82f6' },
+    ],
+  },
+  'BUY_23878': {
+    buyer_id: 'BUY_23878',
+    channels: [
+      { name: 'Email', value: 99, color: '#ea4335' },
+      { name: 'LinkedIn', value: 87, color: '#0077b5' },
+    ],
+  },
+  'BUY_77508': {
+    buyer_id: 'BUY_77508',
+    channels: [
+      { name: 'LinkedIn', value: 61, color: '#0077b5' },
+      { name: 'WhatsApp', value: 39, color: '#25D366' },
+    ],
+  },
+  'BUY_72750': {
+    buyer_id: 'BUY_72750',
+    channels: [
+      { name: 'Call', value: 77, color: '#3b82f6' },
+      { name: 'LinkedIn', value: 69, color: '#0077b5' },
+    ],
+  },
+  'BUY_77149': {
+    buyer_id: 'BUY_77149',
+    channels: [
+      { name: 'WhatsApp', value: 65, color: '#25D366' },
+      { name: 'LinkedIn', value: 50, color: '#0077b5' },
+    ],
+  },
+  'BUY_42262': {
+    buyer_id: 'BUY_42262',
+    channels: [
+      { name: 'Call', value: 86, color: '#3b82f6' },
+      { name: 'SMS', value: 58, color: '#10b981' },
+    ],
+  },
+  'BUY_78426': {
+    buyer_id: 'BUY_78426',
+    channels: [
+      { name: 'LinkedIn', value: 83, color: '#0077b5' },
+      { name: 'WhatsApp', value: 78, color: '#25D366' },
+    ],
+  },
+  'BUY_77709': {
+    buyer_id: 'BUY_77709',
+    channels: [
+      { name: 'Email', value: 80, color: '#ea4335' },
+      { name: 'LinkedIn', value: 64, color: '#0077b5' },
+    ],
+  },
 }

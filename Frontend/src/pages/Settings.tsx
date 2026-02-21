@@ -1,9 +1,8 @@
 import { motion } from 'framer-motion'
 import { Settings as SettingsIcon, User, Bell, Shield, Database } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Select } from '@/components/ui/select'
+import { Input } from '@/components/ui/input'
 
 export default function Settings() {
   return (

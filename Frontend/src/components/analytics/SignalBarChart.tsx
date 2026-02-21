@@ -17,7 +17,7 @@ export default function SignalBarChart({ data }: SignalBarChartProps) {
       className="rounded-xl bg-gradient-to-br from-card to-card/50 p-6 backdrop-blur border border-white/10 shadow-lg"
     >
       <h3 className="text-lg font-semibold mb-6">Signal Intelligence Breakdown</h3>
-      
+
       <ResponsiveContainer width="100%" height={280}>
         <BarChart data={data} layout="vertical" margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" horizontal={false} />
@@ -32,7 +32,7 @@ export default function SignalBarChart({ data }: SignalBarChartProps) {
             cursor={{ fill: 'hsl(var(--accent))' }}
           />
           <Bar dataKey="value" radius={[0, 8, 8, 0]} animationDuration={800}>
-            {data.map((entry, index) => (
+            {data.map((_entry, index) => (
               <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
             ))}
           </Bar>
