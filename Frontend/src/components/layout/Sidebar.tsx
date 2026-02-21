@@ -3,7 +3,6 @@ import { motion } from 'framer-motion'
 import {
   LayoutDashboard,
   Building2,
-  Network,
   Workflow,
   Sparkles,
   Radio,
@@ -18,8 +17,7 @@ import { cn } from '@/lib/utils'
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Companies', href: '/companies', icon: Building2 },
-  { name: 'Outreach Strategy', href: '/workflow', icon: Network },
-  { name: 'Workflow Builder', href: '/workflow', icon: Workflow },
+  { name: 'Outreach Strategy', href: '/workflow', icon: Workflow },
   { name: 'Content Generator', href: '/content-generator', icon: Sparkles },
   { name: 'Signal Monitor', href: '/signals', icon: Radio },
   { name: 'Conversations', href: '/conversations', icon: MessageSquare },
@@ -30,7 +28,7 @@ const navigation = [
 export default function Sidebar() {
   const location = useLocation()
   const { sidebarOpen, toggleSidebar, theme } = useUIStore()
-  
+
   const logoSrc = theme === 'dark' ? '/polydeal_logo_dark.png' : '/polydeal_logo_light.png'
 
   return (
@@ -48,9 +46,9 @@ export default function Sidebar() {
           {/* Logo */}
           <div className="flex h-16 items-center justify-between border-b border-border px-6">
             <div className="flex items-center gap-3">
-              <img 
-                src={logoSrc} 
-                alt="PolyDeal Logo" 
+              <img
+                src={logoSrc}
+                alt="PolyDeal Logo"
                 className="h-10 w-10 object-contain"
               />
               <span className="text-lg font-semibold">PolyDeal</span>
@@ -66,8 +64,8 @@ export default function Sidebar() {
           {/* Navigation */}
           <nav className="flex-1 space-y-1 overflow-y-auto p-4 scrollbar-hide">
             {navigation.map((item) => {
-              const isActive = location.pathname === item.href || 
-                             (item.href !== '/dashboard' && location.pathname.startsWith(item.href))
+              const isActive = location.pathname === item.href ||
+                (item.href !== '/dashboard' && location.pathname.startsWith(item.href))
               const Icon = item.icon
 
               return (
