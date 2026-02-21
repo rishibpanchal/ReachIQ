@@ -6,19 +6,15 @@ import StatCard from '@/components/cards/StatCard'
 import IntentPieChart from '@/components/charts/IntentPieChart'
 import ChannelBarChart from '@/components/charts/ChannelBarChart'
 import SuccessLineChart from '@/components/charts/SuccessLineChart'
-import MeetingCalendar from '@/components/meeting/MeetingCalendar'
-import UpcomingMeetings from '@/components/meeting/UpcomingMeetings'
+import DashboardMeetingSection from '@/components/dashboard/DashboardMeetingSection'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { getIntentBadge, getIntentLabel } from '@/lib/utils'
-import { useMeetingStore } from '@/store/meetingStore'
 
 export default function Dashboard() {
   const navigate = useNavigate()
   const { data: stats, isLoading } = useDashboardStats()
-  const meetings = useMeetingStore(state => state.meetings)
-  const scheduledMeetings = [...meetings].sort((a, b) => new Date(`${a.date}T${a.startTime}`).getTime() - new Date(`${b.date}T${b.startTime}`).getTime())
 
   if (isLoading) {
     return (
@@ -76,71 +72,13 @@ export default function Dashboard() {
         />
       </div>
 
-      {/* Meeting Calendar and Upcoming Meetings */}
-      <div className="grid gap-4 md:grid-cols-2">
-        <MeetingCalendar />
-        <UpcomingMeetings />
-      </div>
-
-      {/* Upcoming Meetings */}
+      {/* Calendar + Meeting Log Panel */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.35 }}
       >
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-xl font-bold">
-              System Meetings
-              <Badge variant="outline" className="ml-2 bg-primary/5 text-primary border-primary/20">
-                {scheduledMeetings.length} scheduled
-              </Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {scheduledMeetings.length === 0 ? (
-                <div className="col-span-full py-8 text-center text-muted-foreground">
-                  No meetings scheduled. Use the floating + button to schedule one.
-                </div>
-              ) : (
-                scheduledMeetings.map((meeting) => (
-                  <Card key={meeting.id} className="bg-accent/30 border-none shadow-none hover:bg-accent/50 transition-colors cursor-pointer">
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="font-bold text-sm tracking-tight">{meeting.title || "Meeting"}</span>
-                        <Badge
-                          variant={'default'}
-                          className={`text-[10px] px-1.5 py-0.5 rounded-sm uppercase tracking-wider bg-green-500/20 text-green-700 hover:bg-green-500/20`}
-                        >
-                          Scheduled
-                        </Badge>
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="text-muted-foreground">Company:</span>
-                          <span className="font-medium">{meeting.company || 'N/A'}</span>
-                        </div>
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="text-muted-foreground">Type:</span>
-                          <span className="text-primary font-semibold">{meeting.type}</span>
-                        </div>
-                        <div className="pt-2 border-t border-accent/50 flex items-center justify-between text-[11px]">
-                          <span className="text-muted-foreground font-medium">
-                            {new Date(meeting.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
-                          </span>
-                          <span className="text-foreground font-bold italic">
-                            {meeting.startTime} - {meeting.endTime}
-                          </span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))
-              )}
-            </div>
-          </CardContent>
-        </Card>
+        <DashboardMeetingSection />
       </motion.div>
       {/* Charts */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

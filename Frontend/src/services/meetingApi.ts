@@ -21,7 +21,7 @@ export const useFetchMeetings = () => {
   })
 }
 
-// Create a new meeting with optional Google Calendar sync
+// Create a new meeting with optional Google Calendar sync (falls back to local store when API unavailable)
 export const useCreateMeeting = () => {
   const queryClient = useQueryClient()
   const addMeeting = useMeetingStore((state) => state.addMeeting)
@@ -29,57 +29,57 @@ export const useCreateMeeting = () => {
   return useMutation({
     mutationFn: async (meeting: Omit<Meeting, 'id' | 'createdAt' | 'updatedAt'> & { syncWithGoogle?: boolean }) => {
       const { syncWithGoogle, ...meetingData } = meeting
+      const now = new Date().toISOString()
+      const id = `meeting_${Date.now()}`
 
-      // Create the meeting record
-      const response = await fetch(MEETINGS_API, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...meetingData,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          id: `meeting_${Date.now()}`,
-        }),
-      })
+      try {
+        const response = await fetch(MEETINGS_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...meetingData,
+            id,
+            createdAt: now,
+            updatedAt: now,
+          }),
+        })
 
-      if (!response.ok) throw new Error('Failed to create meeting')
-      const data = await response.json()
+        if (!response.ok) throw new Error('API unavailable')
+        const data = await response.json()
 
-      // If Google Calendar sync is enabled, create event
-      if (syncWithGoogle) {
-        try {
-          const googleResponse = await fetch(`${GOOGLE_CALENDAR_API}/create-event`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              meetingId: data.id,
-              title: data.title,
-              description: data.description,
-              startDateTime: `${data.date}T${data.startTime}:00`,
-              endDateTime: `${data.date}T${data.endTime}:00`,
-              attendees: data.attendees || [],
-              meetingLink: data.meetingLink,
-            }),
-          })
-
-          if (googleResponse.ok) {
-            const googleData = await googleResponse.json()
-            data.googleCalendarEventId = googleData.eventId
-            
-            // Update meeting with Google Calendar event ID
-            await fetch(`${MEETINGS_API}/${data.id}`, {
-              method: 'PUT',
+        if (syncWithGoogle) {
+          try {
+            const googleResponse = await fetch(`${GOOGLE_CALENDAR_API}/create-event`, {
+              method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ googleCalendarEventId: googleData.eventId }),
+              body: JSON.stringify({
+                meetingId: data.id,
+                title: data.title,
+                description: data.description,
+                startDateTime: `${data.date}T${data.startTime}:00`,
+                endDateTime: `${data.date}T${data.endTime}:00`,
+                attendees: data.attendees || [],
+                meetingLink: data.meetingLink,
+              }),
             })
+            if (googleResponse.ok) {
+              const googleData = await googleResponse.json()
+              data.googleCalendarEventId = googleData.eventId
+            }
+          } catch {
+            /* ignore */
           }
-        } catch (error) {
-          console.error('Google Calendar sync failed:', error)
-          // Continue even if Google Calendar sync fails
+        }
+        return data
+      } catch {
+        // Fallback: add to local store when API unavailable
+        return {
+          id,
+          ...meetingData,
+          createdAt: now,
+          updatedAt: now,
         }
       }
-
-      return data
     },
     onSuccess: (newMeeting) => {
       addMeeting(newMeeting)

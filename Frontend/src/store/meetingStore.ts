@@ -34,10 +34,24 @@ interface MeetingStore {
   getTodayMeetings: () => Meeting[]
   getThisWeekMeetings: () => Meeting[]
   getThisMonthMeetings: () => Meeting[]
+  getMeetingsForDate: (dateStr: string) => Meeting[]
 }
 
+const today = new Date().toISOString().split('T')[0]
+const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0]
+const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0]
+const nextWeek = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0]
+
+const SEED_MEETINGS: Meeting[] = [
+  { id: 'seed_1', title: 'Q1 Planning', company: 'Acme Corp', date: yesterday, startTime: '10:00', endTime: '11:00', type: 'Online', meetingLink: 'https://zoom.us/j/123', createdAt: yesterday, updatedAt: yesterday },
+  { id: 'seed_2', title: 'Product Review', company: 'TechStart', date: today, startTime: '14:00', endTime: '15:00', type: 'Online', description: 'Review new features', createdAt: today, updatedAt: today },
+  { id: 'seed_3', title: 'Client Call', company: 'Global Inc', date: today, startTime: '16:00', endTime: '17:00', type: 'Offline', createdAt: today, updatedAt: today },
+  { id: 'seed_4', title: 'Team Sync', company: 'Internal', date: tomorrow, startTime: '09:00', endTime: '09:30', type: 'Online', createdAt: today, updatedAt: today },
+  { id: 'seed_5', title: 'Sales Demo', company: 'Enterprise Co', date: nextWeek, startTime: '11:00', endTime: '12:00', type: 'Online', meetingLink: 'https://meet.google.com/abc', createdAt: today, updatedAt: today },
+]
+
 export const useMeetingStore = create<MeetingStore>((set, get) => ({
-  meetings: [],
+  meetings: SEED_MEETINGS,
   isModalOpen: false,
   isLoading: false,
   initialMeetingData: undefined,
@@ -106,5 +120,11 @@ export const useMeetingStore = create<MeetingStore>((set, get) => ({
       const meetingDate = new Date(m.date)
       return meetingDate >= monthStart && meetingDate <= monthEnd
     })
+  },
+
+  getMeetingsForDate: (dateStr: string) => {
+    return get().meetings
+      .filter(m => m.date === dateStr)
+      .sort((a, b) => a.startTime.localeCompare(b.startTime))
   },
 }))
