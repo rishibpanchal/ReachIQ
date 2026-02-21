@@ -1,4 +1,5 @@
 import { Menu, Bell, HelpCircle, Sun, Moon } from 'lucide-react'
+import { SignedIn, UserButton } from '@clerk/clerk-react'
 import { useUIStore } from '@/store'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -56,6 +57,10 @@ export default function Navbar() {
             3
           </Badge>
         </Button>
+
+        <SignedIn>
+          <UserButton afterSignOutUrl="/" />
+        </SignedIn>
       </div>
     </header>
   )

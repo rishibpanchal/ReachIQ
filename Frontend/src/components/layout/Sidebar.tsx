@@ -11,6 +11,7 @@ import {
   Settings,
   ChevronLeft,
 } from 'lucide-react'
+import { SignedIn, SignedOut, useUser } from '@clerk/clerk-react'
 import { useUIStore } from '@/store'
 import { cn } from '@/lib/utils'
 
@@ -28,6 +29,7 @@ const navigation = [
 export default function Sidebar() {
   const location = useLocation()
   const { sidebarOpen, toggleSidebar, theme } = useUIStore()
+  const { user } = useUser()
 
   const logoSrc = theme === 'dark' ? '/polydeal_logo_dark.png' : '/polydeal_logo_light.png'
 
@@ -88,15 +90,28 @@ export default function Sidebar() {
 
           {/* User Section */}
           <div className="border-t border-border p-4">
-            <div className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-accent">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
-                JD
+            <SignedIn>
+              <div className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-accent">
+                <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-primary text-sm font-semibold text-primary-foreground">
+                  {user?.imageUrl ? (
+                    <img src={user.imageUrl} alt={user.fullName ?? 'User'} className="h-full w-full object-cover" />
+                  ) : (
+                    <span>{user?.firstName?.[0] ?? 'U'}</span>
+                  )}
+                </div>
+                <div className="flex-1 overflow-hidden">
+                  <p className="truncate text-sm font-medium">{user?.fullName ?? 'Signed in user'}</p>
+                  <p className="truncate text-xs text-muted-foreground">
+                    {user?.emailAddresses?.[0]?.emailAddress ?? ''}
+                  </p>
+                </div>
               </div>
-              <div className="flex-1 overflow-hidden">
-                <p className="truncate text-sm font-medium">John Doe</p>
-                <p className="truncate text-xs text-muted-foreground">john@company.com</p>
+            </SignedIn>
+            <SignedOut>
+              <div className="flex items-center gap-3 rounded-lg px-3 py-2 text-xs text-muted-foreground">
+                Sign in to view your profile
               </div>
-            </div>
+            </SignedOut>
           </div>
         </div>
       </motion.aside>
