@@ -9,6 +9,7 @@ import Signals from '@/pages/Signals'
 import Conversations from '@/pages/Conversations'
 import Analytics from '@/pages/Analytics'
 import Settings from '@/pages/Settings'
+import SchedulePage from '@/pages/SchedulePage'
 import AuthPage from '@/pages/AuthPage'
 import DashboardPage from '@/pages/DashboardPage'
 import LandingPage from '@/pages/LandingPage'
@@ -42,6 +43,7 @@ function App() {
       <Route path="/auth" element={<AuthPage />} />
       <Route element={<ProtectedLayout />}>
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/schedule" element={<SchedulePage />} />
         <Route path="/companies" element={<Companies />} />
         <Route path="/companies/:id" element={<CompanyDetail />} />
         <Route path="/workflow" element={<Workflow />} />

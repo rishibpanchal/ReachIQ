@@ -10,6 +10,7 @@ import {
   BarChart3,
   Settings,
   ChevronLeft,
+  Calendar,
 } from 'lucide-react'
 import { SignedIn, SignedOut, useUser } from '@clerk/clerk-react'
 import { useUIStore } from '@/store'
@@ -17,6 +18,7 @@ import { cn } from '@/lib/utils'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Schedule', href: '/schedule', icon: Calendar },
   { name: 'Companies', href: '/companies', icon: Building2 },
   { name: 'Outreach Strategy', href: '/workflow', icon: Workflow },
   { name: 'Content Generator', href: '/content-generator', icon: Sparkles },

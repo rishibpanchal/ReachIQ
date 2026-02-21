@@ -1,6 +1,8 @@
 import { Outlet } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import Navbar from './Navbar'
+import FloatingMeetingButton from '@/components/meeting/FloatingMeetingButton'
+import MeetingModal from '@/components/meeting/MeetingModal'
 import { useUIStore } from '@/store'
 import { cn } from '@/lib/utils'
 
@@ -22,6 +24,10 @@ export default function Layout() {
           <Outlet />
         </main>
       </div>
+
+      {/* Global Meeting System */}
+      <FloatingMeetingButton />
+      <MeetingModal />
     </div>
   )
 }

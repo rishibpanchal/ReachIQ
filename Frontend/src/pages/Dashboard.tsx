@@ -2,10 +2,13 @@ import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { Building2, TrendingUp, Activity, AlertCircle } from 'lucide-react'
 import { useDashboardStats } from '@/hooks/useApi'
+import { useFetchMeetings } from '@/services/meetingApi'
 import StatCard from '@/components/cards/StatCard'
 import IntentPieChart from '@/components/charts/IntentPieChart'
 import ChannelBarChart from '@/components/charts/ChannelBarChart'
 import SuccessLineChart from '@/components/charts/SuccessLineChart'
+import MeetingCalendar from '@/components/meeting/MeetingCalendar'
+import UpcomingMeetings from '@/components/meeting/UpcomingMeetings'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
@@ -14,6 +17,7 @@ import { getIntentBadge, getIntentLabel } from '@/lib/utils'
 export default function Dashboard() {
   const navigate = useNavigate()
   const { data: stats, isLoading } = useDashboardStats()
+  const { isLoading: isMeetingsLoading } = useFetchMeetings()
 
   if (isLoading) {
     return (
@@ -71,6 +75,12 @@ export default function Dashboard() {
         />
       </div>
 
+      {/* Meeting Calendar and Upcoming Meetings */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <MeetingCalendar />
+        <UpcomingMeetings />
+      </div>
+
       {/* Upcoming Meetings */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -80,7 +90,7 @@ export default function Dashboard() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-xl font-bold">
-              Upcoming Meetings
+              System Meetings
               <Badge variant="outline" className="ml-2 bg-primary/5 text-primary border-primary/20">
                 {stats.upcoming_meetings.length} scheduled
               </Badge>
