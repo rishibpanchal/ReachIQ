@@ -1,0 +1,48 @@
+# Version control
+.git
+.gitignore
+.gitlab-ci.yml
+.github
+
+# Node modules and build outputs
+node_modules
+dist
+build
+.next
+out
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.egg
+*.egg-info
+.PyInstalled
+*.so
+.env
+.venv
+venv
+env
+ENV
+.Python
+
+# IDEs and editors
+.vscode
+.idea
+.DS_Store
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings
+
+# Testing
+.coverage
+.pytest_cache
+htmlcov
+
+# Temporary files
+*.log
+tmp
+temp

@@ -14,7 +14,8 @@ const statusDot: Record<DecisionTreeNodeData['status'], string> = {
   pending: 'bg-slate-400',
 }
 
-export default function DecisionNode({ data }: NodeProps<Record<string, unknown>>) {
+// @ts-ignore - NodeProps type compatibility
+export default function DecisionNode({ data }: NodeProps) {
   const nodeData = data as DecisionTreeNodeData
   return (
     <div
