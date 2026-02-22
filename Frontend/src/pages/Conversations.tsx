@@ -1,14 +1,23 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { MessageSquare, Search } from 'lucide-react'
+import { MessageSquare, Search, ExternalLink } from 'lucide-react'
 import { useConversations } from '@/hooks/useApi'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { formatDateTime, cn } from '@/lib/utils'
 import ChatWindow from '@/components/chat/ChatWindow'
 import CompanyAnalyticsPanel from '@/components/analytics/CompanyAnalyticsPanel'
 
+const COMPANY_ROUTES: Record<string, string> = {
+  'Tesla Inc.': '/conversations/tesla',
+  'Microsoft': '/conversations/microsoft',
+  'Stripe': '/conversations/stripe',
+}
+
 export default function Conversations() {
+  const navigate = useNavigate()
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -19,6 +28,13 @@ export default function Conversations() {
   const filteredConversations = conversations?.filter((conv) =>
     conv.company_name.toLowerCase().includes(searchQuery.toLowerCase())
   )
+
+  const handleNavigateToCompany = (companyName: string) => {
+    const route = COMPANY_ROUTES[companyName]
+    if (route) {
+      navigate(route)
+    }
+  }
 
   if (isLoading) {
     return (
@@ -81,12 +97,28 @@ export default function Conversations() {
                   onClick={() => setSelectedConversationId(conversation.id)}
                 >
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <h3 className={cn(
-                      'font-semibold truncate transition-colors',
-                      selectedConversationId === conversation.id && 'text-primary'
-                    )}>
-                      {conversation.company_name}
-                    </h3>
+                    <div className="flex-1">
+                      <h3 className={cn(
+                        'font-semibold truncate transition-colors',
+                        selectedConversationId === conversation.id && 'text-primary'
+                      )}>
+                        {conversation.company_name}
+                      </h3>
+                      {COMPANY_ROUTES[conversation.company_name] && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-auto p-0 text-xs text-muted-foreground hover:text-primary mt-1"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleNavigateToCompany(conversation.company_name)
+                          }}
+                        >
+                          <ExternalLink className="h-3 w-3 mr-1" />
+                          View Details
+                        </Button>
+                      )}
+                    </div>
                     {conversation.unread_count > 0 && (
                       <Badge className="bg-primary text-white text-xs px-2 py-0.5 border-0">
                         {conversation.unread_count}

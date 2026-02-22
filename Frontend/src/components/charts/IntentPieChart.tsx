@@ -13,6 +13,39 @@ interface IntentPieChartProps {
 }
 
 export default function IntentPieChart({ data, title = 'Intent Distribution' }: IntentPieChartProps) {
+  const renderLabel = ({
+    cx,
+    cy,
+    midAngle,
+    outerRadius,
+    name,
+    percent,
+  }: {
+    cx: number
+    cy: number
+    midAngle: number
+    outerRadius: number
+    name: string
+    percent: number
+  }) => {
+    const radius = outerRadius + 14
+    const x = cx + radius * Math.cos(-midAngle * (Math.PI / 180))
+    const y = cy + radius * Math.sin(-midAngle * (Math.PI / 180))
+
+    return (
+      <text
+        x={x}
+        y={y}
+        textAnchor={x > cx ? 'start' : 'end'}
+        dominantBaseline="central"
+        fill="hsl(var(--foreground))"
+        className="text-xs"
+      >
+        {`${name} ${(percent * 100).toFixed(0)}%`}
+      </text>
+    )
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -25,8 +58,8 @@ export default function IntentPieChart({ data, title = 'Intent Distribution' }: 
               data={data}
               cx="50%"
               cy="50%"
-              labelLine={false}
-              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+              labelLine
+              label={renderLabel}
               outerRadius={80}
               fill="#8884d8"
               dataKey="value"
@@ -35,8 +68,14 @@ export default function IntentPieChart({ data, title = 'Intent Distribution' }: 
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Pie>
-            <Tooltip />
-            <Legend />
+            <Tooltip
+              contentStyle={{
+                background: 'hsl(var(--card))',
+                borderColor: 'hsl(var(--border))',
+                color: 'hsl(var(--foreground))',
+              }}
+            />
+            <Legend wrapperStyle={{ color: 'hsl(var(--foreground))' }} />
           </PieChart>
         </ResponsiveContainer>
       </CardContent>

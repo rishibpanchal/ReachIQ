@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { X, Calendar } from 'lucide-react'
+import { X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useMeetingStore } from '@/store/meetingStore'
 import { useCreateMeeting } from '@/services/meetingApi'
@@ -7,27 +7,15 @@ import { useBuyers } from '@/hooks/useApi'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
+import DatePicker from './DatePicker'
+import TimePicker from './TimePicker'
 
-const TIME_SLOTS = [
-  { label: '09:00 AM', value: '09:00' },
-  { label: '09:30 AM', value: '09:30' },
-  { label: '10:00 AM', value: '10:00' },
-  { label: '10:30 AM', value: '10:30' },
-  { label: '11:00 AM', value: '11:00' },
-  { label: '11:30 AM', value: '11:30' },
-  { label: '12:00 PM', value: '12:00' },
-  { label: '12:30 PM', value: '12:30' },
-  { label: '01:00 PM', value: '13:00' },
-  { label: '01:30 PM', value: '13:30' },
-  { label: '02:00 PM', value: '14:00' },
-  { label: '02:30 PM', value: '14:30' },
-  { label: '03:00 PM', value: '15:00' },
-  { label: '03:30 PM', value: '15:30' },
-  { label: '04:00 PM', value: '16:00' },
-  { label: '04:30 PM', value: '16:30' },
-  { label: '05:00 PM', value: '17:00' },
-  { label: '05:30 PM', value: '17:30' },
-]
+// Helper function to add 1 hour to a time string
+const addOneHour = (timeStr: string): string => {
+  const [hours, minutes] = timeStr.split(':').map(Number)
+  const newHours = (hours + 1) % 24
+  return `${String(newHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`
+}
 
 export default function ScheduleMeetingModal() {
   const isModalOpen = useMeetingStore((state) => state.isModalOpen)
@@ -45,7 +33,6 @@ export default function ScheduleMeetingModal() {
     meetingLink: '',
     description: '',
     attendees: '',
-    syncGoogleCalendar: false,
   })
 
   const initialMeetingData = useMeetingStore((state) => state.initialMeetingData)
@@ -66,6 +53,15 @@ export default function ScheduleMeetingModal() {
       }))
     }
   }, [isModalOpen, initialMeetingData])
+
+  const handleStartTimeChange = (newStartTime: string) => {
+    const newEndTime = addOneHour(newStartTime)
+    setFormData(prev => ({
+      ...prev,
+      startTime: newStartTime,
+      endTime: newEndTime,
+    }))
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target
@@ -96,7 +92,6 @@ export default function ScheduleMeetingModal() {
         meetingLink: formData.meetingLink || undefined,
         description: formData.description || undefined,
         attendees: attendeesList.length > 0 ? attendeesList : undefined,
-        syncWithGoogle: formData.syncGoogleCalendar,
       },
       {
         onSuccess: () => {
@@ -110,7 +105,6 @@ export default function ScheduleMeetingModal() {
             meetingLink: '',
             description: '',
             attendees: '',
-            syncGoogleCalendar: false,
           })
           closeModal()
         },
@@ -189,17 +183,13 @@ export default function ScheduleMeetingModal() {
 
                   {/* Date */}
                   <div>
-                    <label className="block text-sm font-semibold mb-2 text-foreground flex items-center gap-2">
-                      <Calendar className="h-4 w-4" />
+                    <label className="block text-sm font-semibold mb-2 text-foreground">
                       Date *
                     </label>
-                    <Input
-                      type="date"
-                      name="date"
+                    <DatePicker
                       value={formData.date}
-                      onChange={handleChange}
-                      required
-                      className="bg-slate-900/30"
+                      onChange={(date) => setFormData(prev => ({ ...prev, date }))}
+                      placeholder="Select a date"
                     />
                   </div>
 
@@ -207,35 +197,21 @@ export default function ScheduleMeetingModal() {
                     {/* Start Time */}
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-foreground">Start Time *</label>
-                      <Select
-                        name="startTime"
+                      <TimePicker
                         value={formData.startTime}
-                        onChange={handleChange}
-                        className="bg-slate-900/30"
-                      >
-                        {TIME_SLOTS.map((slot) => (
-                          <option key={slot.value} value={slot.value}>
-                            {slot.label}
-                          </option>
-                        ))}
-                      </Select>
+                        onChange={handleStartTimeChange}
+                        placeholder="Select start time"
+                      />
                     </div>
 
                     {/* End Time */}
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-foreground">End Time *</label>
-                      <Select
-                        name="endTime"
+                      <TimePicker
                         value={formData.endTime}
-                        onChange={handleChange}
-                        className="bg-slate-900/30"
-                      >
-                        {TIME_SLOTS.map((slot) => (
-                          <option key={slot.value} value={slot.value}>
-                            {slot.label}
-                          </option>
-                        ))}
-                      </Select>
+                        onChange={(endTime) => setFormData(prev => ({ ...prev, endTime }))}
+                        placeholder="Select end time"
+                      />
                     </div>
                   </div>
 
@@ -293,21 +269,7 @@ export default function ScheduleMeetingModal() {
                     />
                   </div>
 
-                  {/* Google Calendar Sync */}
-                  <div className="flex items-center gap-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 p-4">
-                    <input
-                      type="checkbox"
-                      id="syncGoogle"
-                      name="syncGoogleCalendar"
-                      checked={formData.syncGoogleCalendar}
-                      onChange={handleChange}
-                      className="h-4 w-4 rounded border-emerald-500"
-                    />
-                    <label htmlFor="syncGoogle" className="text-sm font-medium cursor-pointer flex-1">
-                      <div className="font-semibold text-emerald-600">Sync with Google Calendar</div>
-                      <div className="text-xs text-muted-foreground">Automatically add this meeting to your Google Calendar</div>
-                    </label>
-                  </div>
+
                 </div>
 
                 {/* Actions */}

@@ -2,7 +2,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useMeetingStore, type Meeting } from '@/store/meetingStore'
 
 const MEETINGS_API = '/api/meetings'
-const GOOGLE_CALENDAR_API = '/api/google-calendar'
 
 // Fetch all meetings
 export const useFetchMeetings = () => {
@@ -21,14 +20,13 @@ export const useFetchMeetings = () => {
   })
 }
 
-// Create a new meeting with optional Google Calendar sync (falls back to local store when API unavailable)
+// Create a new meeting
 export const useCreateMeeting = () => {
   const queryClient = useQueryClient()
   const addMeeting = useMeetingStore((state) => state.addMeeting)
 
   return useMutation({
-    mutationFn: async (meeting: Omit<Meeting, 'id' | 'createdAt' | 'updatedAt'> & { syncWithGoogle?: boolean }) => {
-      const { syncWithGoogle, ...meetingData } = meeting
+    mutationFn: async (meeting: Omit<Meeting, 'id' | 'createdAt' | 'updatedAt'>) => {
       const now = new Date().toISOString()
       const id = `meeting_${Date.now()}`
 
@@ -37,7 +35,7 @@ export const useCreateMeeting = () => {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            ...meetingData,
+            ...meeting,
             id,
             createdAt: now,
             updatedAt: now,
@@ -45,37 +43,12 @@ export const useCreateMeeting = () => {
         })
 
         if (!response.ok) throw new Error('API unavailable')
-        const data = await response.json()
-
-        if (syncWithGoogle) {
-          try {
-            const googleResponse = await fetch(`${GOOGLE_CALENDAR_API}/create-event`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                meetingId: data.id,
-                title: data.title,
-                description: data.description,
-                startDateTime: `${data.date}T${data.startTime}:00`,
-                endDateTime: `${data.date}T${data.endTime}:00`,
-                attendees: data.attendees || [],
-                meetingLink: data.meetingLink,
-              }),
-            })
-            if (googleResponse.ok) {
-              const googleData = await googleResponse.json()
-              data.googleCalendarEventId = googleData.eventId
-            }
-          } catch {
-            /* ignore */
-          }
-        }
-        return data
+        return response.json()
       } catch {
         // Fallback: add to local store when API unavailable
         return {
           id,
-          ...meetingData,
+          ...meeting,
           createdAt: now,
           updatedAt: now,
         }

@@ -7,6 +7,9 @@ import Workflow from '@/pages/Workflow'
 import ContentGenerator from '@/pages/ContentGenerator'
 import Signals from '@/pages/Signals'
 import Conversations from '@/pages/Conversations'
+import TeslaConversations from '@/pages/TeslaConversations'
+import MicrosoftConversations from '@/pages/MicrosoftConversations'
+import StripeConversations from '@/pages/StripeConversations'
 import Analytics from '@/pages/Analytics'
 import AuthPage from '@/pages/AuthPage'
 import DashboardPage from '@/pages/DashboardPage'
@@ -48,6 +51,9 @@ function App() {
         <Route path="/content-generator" element={<ContentGenerator />} />
         <Route path="/signals" element={<Signals />} />
         <Route path="/conversations" element={<Conversations />} />
+        <Route path="/conversations/tesla" element={<TeslaConversations />} />
+        <Route path="/conversations/microsoft" element={<MicrosoftConversations />} />
+        <Route path="/conversations/stripe" element={<StripeConversations />} />
         <Route path="/analytics" element={<Analytics />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

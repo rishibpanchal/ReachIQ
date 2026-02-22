@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import Navbar from './Navbar'
 import MeetingModal from '@/components/meeting/MeetingModal'
+import BackToTop from '@/components/ui/BackToTop'
 import { useUIStore } from '@/store'
 import { cn } from '@/lib/utils'
 
@@ -26,6 +27,9 @@ export default function Layout() {
 
       {/* Global Meeting System */}
       <MeetingModal />
+
+      {/* Back to Top Button */}
+      <BackToTop />
     </div>
   )
 }
