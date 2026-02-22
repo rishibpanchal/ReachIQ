@@ -5,8 +5,16 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+// Convert UTC date to Indian Timezone (GMT +5:30) + 6.5 hrs
+export function convertToIST(date: Date): Date {
+  const utcDate = new Date(date)
+  const istDate = new Date(utcDate.getTime() + (12 * 60 * 60 * 1000))
+  return istDate
+}
+
 export function formatDate(date: string): string {
-  return new Date(date).toLocaleDateString('en-US', {
+  const istDate = convertToIST(new Date(date))
+  return istDate.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
@@ -14,13 +22,14 @@ export function formatDate(date: string): string {
 }
 
 export function formatDateTime(date: string): string {
-  return new Date(date).toLocaleString('en-US', {
+  const istDate = convertToIST(new Date(date))
+  return istDate.toLocaleString('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
-  })
+  }) + ' IST'
 }
 
 export function getIntentColor(score: number): string {

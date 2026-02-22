@@ -44,10 +44,16 @@ const DOMAIN_OPTIONS: { value: NewsCategory; label: string }[] = [
   { value: 'entertainment', label: 'Entertainment' },
 ]
 
+// Convert UTC date to Indian Timezone (GMT +5:30) + 6.5 hrs
+function convertToIST(date: Date): Date {
+  const istDate = new Date(date.getTime() + (12 * 60 * 60 * 1000))
+  return istDate
+}
+
 function formatTimeAgo(dateStr: string): string {
   try {
-    const date = new Date(dateStr)
-    const now = new Date()
+    const date = convertToIST(new Date(dateStr))
+    const now = convertToIST(new Date())
     const diffMs = now.getTime() - date.getTime()
     const diffMins = Math.floor(diffMs / 60000)
     const diffHours = Math.floor(diffMins / 60)
