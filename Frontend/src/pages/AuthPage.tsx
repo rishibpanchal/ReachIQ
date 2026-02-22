@@ -3,7 +3,7 @@ import { useUIStore } from '@/store'
 
 export default function AuthPage() {
   const { theme } = useUIStore()
-  const logoSrc = theme === 'dark' ? '/polydeal_logo_dark.png' : '/polydeal_logo_light.png'
+  const logoSrc = theme === 'dark' ? '/reachiq_logo_dark.png' : '/reachiq_logo_light.png'
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 text-slate-100">
@@ -12,7 +12,7 @@ export default function AuthPage() {
           <div className="mb-6 text-center">
             <img
               src={logoSrc}
-              alt="PolyDeal Logo"
+              alt="ReachIQ Logo"
               className="mx-auto h-16 w-16 object-contain mb-4"
             />
             <h1 className="text-3xl font-semibold tracking-tight">Welcome back</h1>

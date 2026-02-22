@@ -34,7 +34,7 @@ export default function Dashboard() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold">Dashboard Overview</h1>
-        <p className="text-muted-foreground">Monitor your PolyDeal outreach intelligence metrics</p>
+        <p className="text-muted-foreground">Monitor your ReachIQ outreach intelligence metrics</p>
       </div>
 
       {/* Stats Cards */}

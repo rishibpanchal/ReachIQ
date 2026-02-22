@@ -122,7 +122,7 @@ export default function WorldNewsSection() {
             <div>
               <h2 className="text-xl font-semibold">World News & Market Intelligence</h2>
               <p className="text-sm text-muted-foreground">
-                Recent activities and trends relevant to Polydeal decision-making
+                Recent activities and trends relevant to ReachIQ decision-making
               </p>
             </div>
           </div>

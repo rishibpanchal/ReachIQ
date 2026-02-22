@@ -13,7 +13,7 @@ import { useSignals } from '@/hooks/useApi'
 
 export default function Navbar() {
   const { sidebarOpen, toggleSidebar, theme, toggleTheme } = useUIStore()
-  const logoSrc = theme === 'dark' ? '/polydeal_logo_dark.png' : '/polydeal_logo_light.png'
+  const logoSrc = theme === 'dark' ? '/reachiq_logo_dark.png' : '/reachiq_logo_light.png'
   const [isNotifOpen, setIsNotifOpen] = useState(false)
   const notifRef = useRef<HTMLDivElement>(null)
   const { data: signalsData, isLoading: signalsLoading } = useSignals({ limit: 5 })
@@ -73,7 +73,7 @@ export default function Navbar() {
           <Link to="/" className="hover:opacity-80 transition-opacity">
             <img
               src={logoSrc}
-              alt="PolyDeal Logo"
+              alt="ReachIQ Logo"
               className="h-8 w-8 object-contain"
             />
           </Link>

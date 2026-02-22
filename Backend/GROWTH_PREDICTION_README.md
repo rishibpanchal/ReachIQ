@@ -409,11 +409,11 @@ MIT License - see LICENSE file for details.
 
 ## Authors
 
-PolyDeal Development Team
+ReachIQ Development Team
 
 ## Support
 
 For issues and questions:
 - GitHub Issues: [Project URL]
 - Documentation: [Docs URL]
-- Email: support@polydeal.com
+- Email: support@reachiq.com

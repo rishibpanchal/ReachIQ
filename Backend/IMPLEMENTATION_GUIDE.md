@@ -2,7 +2,7 @@
 IMPLEMENTATION GUIDE - DYNAMIC CHANNEL OUTREACH ENGINE
 ======================================================
 
-Quick start guide for using the enhanced PolyDeal Outreach Engine
+Quick start guide for using the enhanced ReachIQ Outreach Engine
 with dynamic channel prediction.
 
 ================================================================================

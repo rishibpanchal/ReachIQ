@@ -205,7 +205,7 @@ docker-compose run --rm backend bash
 docker-compose exec frontend ping backend
 
 # Check network
-docker network inspect loc8-network
+docker network inspect reachiq-network
 ```
 
 ### Out of Memory
@@ -225,7 +225,7 @@ docker stats
    - [DOCKER_ARCHITECTURE.md](DOCKER_ARCHITECTURE.md) - Architecture details
 
 2. **Deploy to cloud:**
-   - AWS ECS: `docker push your-registry/loc8-backend`
+   - AWS ECS: `docker push your-registry/reachiq-backend`
    - Google Cloud Run: `gcloud run deploy`
    - Kubernetes: `kompose convert -f docker-compose.prod.yml`
 

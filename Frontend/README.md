@@ -1,6 +1,6 @@
-# PolyDeal - AI Outreach Intelligence Engine
+# ReachIQ - AI Outreach Intelligence Engine
 
-A production-grade, scalable frontend dashboard for PolyDeal's AI Outreach Intelligence Engine built with React, TypeScript, TailwindCSS, and shadcn/ui.
+A production-grade, scalable frontend dashboard for ReachIQ's AI Outreach Intelligence Engine built with React, TypeScript, TailwindCSS, and shadcn/ui.
 
 ## 🚀 Features
 
@@ -77,7 +77,7 @@ A production-grade, scalable frontend dashboard for PolyDeal's AI Outreach Intel
 1. **Clone or navigate to the project directory**
 
 ```bash
-cd d:\ENGINEERING\Hackathon\LOC8\Frontend
+cd Frontend
 ```
 
 2. **Install dependencies**
@@ -272,7 +272,7 @@ This is a production-ready codebase. When making changes:
 
 ## 📄 License
 
-This project is part of PolyDeal's AI Outreach Intelligence Engine.
+This project is licensed under the MIT License.
 
 ## 🔗 Related Projects
 

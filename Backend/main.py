@@ -1,7 +1,7 @@
 """
 FastAPI Main Application
 
-PolyDeal Growth Curve Prediction System
+ReachIQ Growth Curve Prediction System
 """
 
 from pathlib import Path
@@ -32,15 +32,15 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan manager."""
-    logger.info("Starting PolyDeal API...")
+    logger.info("Starting ReachIQ API...")
     # Initialize services here if needed
     yield
-    logger.info("Shutting down PolyDeal API...")
+    logger.info("Shutting down ReachIQ API...")
 
 
 # Create FastAPI app
 app = FastAPI(
-    title="PolyDeal API",
+    title="ReachIQ API",
     description="Growth Curve Prediction and Analytics API",
     version="1.0.0",
     lifespan=lifespan
@@ -66,7 +66,7 @@ app.include_router(news.router, prefix="/api/news", tags=["News"])
 async def root():
     """Root endpoint."""
     return {
-        "message": "PolyDeal Growth Curve Prediction API",
+        "message": "ReachIQ Growth Curve Prediction API",
         "version": "1.0.0",
         "status": "running"
     }
@@ -77,7 +77,7 @@ async def health_check():
     """Health check endpoint."""
     return {
         "status": "healthy",
-        "service": "polydeal-api"
+        "service": "reachiq-api"
     }
 
 

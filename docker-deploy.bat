@@ -1,5 +1,5 @@
 @echo off
-REM LOC8 Docker Deployment Helper Script for Windows
+REM ReachIQ Docker Deployment Helper Script for Windows
 REM Usage: docker-deploy.bat [dev|prod] [command]
 
 setlocal enabledelayedexpansion

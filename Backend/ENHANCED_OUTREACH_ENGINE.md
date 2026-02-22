@@ -2,7 +2,7 @@
 ENHANCED OUTREACH ENGINE - DYNAMIC CHANNEL PREDICTION SYSTEM
 ============================================================
 
-This document outlines the production-ready enhancements made to the PolyDeal
+This document outlines the production-ready enhancements made to the ReachIQ
 Outreach Engine to support dynamic channel prediction instead of hardcoded stages.
 
 ================================================================================

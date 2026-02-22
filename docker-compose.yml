@@ -5,7 +5,7 @@ services:
     build:
       context: ./Backend
       dockerfile: Dockerfile
-    container_name: loc8-backend
+    container_name: reachiq-backend
     ports:
       - "8000:8000"
     env_file:
@@ -17,7 +17,7 @@ services:
     volumes:
       - ./Backend:/app
     networks:
-      - loc8-network
+      - reachiq-network
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/docs')"]
       interval: 30s
@@ -30,7 +30,7 @@ services:
     build:
       context: ./Frontend
       dockerfile: Dockerfile
-    container_name: loc8-frontend
+    container_name: reachiq-frontend
     ports:
       - "3000:3000"
     env_file:
@@ -41,7 +41,7 @@ services:
     depends_on:
       - backend
     networks:
-      - loc8-network
+      - reachiq-network
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/"]
       interval: 30s
@@ -53,7 +53,7 @@ services:
   # Optional: Nginx reverse proxy for production
   nginx:
     image: nginx:alpine
-    container_name: loc8-nginx
+    container_name: reachiq-nginx
     ports:
       - "80:80"
       - "443:443"
@@ -64,11 +64,11 @@ services:
       - frontend
       - backend
     networks:
-      - loc8-network
+      - reachiq-network
     restart: unless-stopped
 
 networks:
-  loc8-network:
+  reachiq-network:
     driver: bridge
 
 volumes:

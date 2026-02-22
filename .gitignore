@@ -5,6 +5,8 @@ env/
 ENV/
 env.bak/
 venv.bak/
+Backend/.venv/
+Backend/venv/
 
 # Python
 __pycache__/
@@ -27,17 +29,23 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+*.pyc
 
 # Node/Frontend
 node_modules/
-npm-debug.log
-yarn-error.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 .pnp
 .pnp.js
+package-lock.json
+# Keep package-lock.json only in Frontend/
+!Frontend/package-lock.json
 
 # Build outputs
 dist/
 build/
+*.tsbuildinfo
 
 # Editor
 .vscode/
@@ -45,16 +53,73 @@ build/
 *.swp
 *.swo
 *~
+*.sublime-*
 
-# Environment
+# Environment files (NEVER commit these)
 .env
 .env.local
 .env.*.local
+.env.backup
+*.env.backup
+.env.development
+.env.production
+.env.test
+
+# Keep example env files
+!.env.example
+!.env.prod.example
+!.env.docker
 
 # OS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+desktop.ini
 
-# Misc
-.cache/
+# Logs
 *.log
+logs/
+*.log.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Testing
+coverage/
+.nyc_output/
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Docker
+.dockerignore
+
+# SSL Certificates (if they contain real keys)
+ssl/*.key
+ssl/*.pem
+!ssl/*.example
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# IDE
+.vscode/settings.json
+.vscode/launch.json
+*.code-workspace
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb_checkpoints

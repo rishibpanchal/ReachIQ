@@ -3,7 +3,7 @@ import { useUIStore } from '@/store'
 
 export default function LandingPage() {
   const { theme } = useUIStore()
-  const logoSrc = theme === 'dark' ? '/polydeal_logo_dark.png' : '/polydeal_logo_light.png'
+  const logoSrc = theme === 'dark' ? '/reachiq_logo_dark.png' : '/reachiq_logo_light.png'
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.15),_transparent_55%),radial-gradient(circle_at_bottom,_rgba(14,165,233,0.18),_transparent_60%)] bg-slate-950 text-slate-100">
@@ -11,10 +11,10 @@ export default function LandingPage() {
         <div className="flex items-center gap-3 mb-4">
           <img
             src={logoSrc}
-            alt="PolyDeal Logo"
+            alt="ReachIQ Logo"
             className="h-12 w-12 object-contain"
           />
-          <p className="text-sm uppercase tracking-[0.35em] text-emerald-300/80">PolyDeal</p>
+          <p className="text-sm uppercase tracking-[0.35em] text-emerald-300/80">ReachIQ</p>
         </div>
         <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
           Deal intelligence, engineered for clarity.
@@ -28,7 +28,7 @@ export default function LandingPage() {
             to="/auth"
             className="rounded-full bg-emerald-400 px-6 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-500/25 transition hover:bg-emerald-300"
           >
-            Sign in to PolyDeal
+            Sign in to ReachIQ
           </Link>
           <Link
             to="/auth"

@@ -29,7 +29,7 @@ export default function Sidebar() {
   const { sidebarOpen, toggleSidebar, theme } = useUIStore()
   const { user } = useUser()
 
-  const logoSrc = theme === 'dark' ? '/polydeal_logo_dark.png' : '/polydeal_logo_light.png'
+  const logoSrc = theme === 'dark' ? '/reachiq_logo_dark.png' : '/reachiq_logo_light.png'
 
   return (
     <>
@@ -48,10 +48,10 @@ export default function Sidebar() {
             <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
               <img
                 src={logoSrc}
-                alt="PolyDeal Logo"
+                alt="ReachIQ Logo"
                 className="h-10 w-10 object-contain"
               />
-              <span className="text-lg font-semibold">PolyDeal</span>
+              <span className="text-lg font-semibold">ReachIQ</span>
             </Link>
             <button
               onClick={toggleSidebar}

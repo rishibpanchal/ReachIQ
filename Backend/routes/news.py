@@ -1,7 +1,7 @@
 """
 News Routes
 
-GNews API proxy for world news relevant to Polydeal decision-making.
+GNews API proxy for world news relevant to ReachIQ decision-making.
 Keeps API key server-side for security.
 """
 
@@ -48,7 +48,7 @@ def _fetch_gnews(endpoint: str, params: dict) -> tuple[list, str | None]:
     url = f"{GNEWS_BASE}/{endpoint}?{urlencode(params)}"
 
     try:
-        req = Request(url, headers={"User-Agent": "Polydeal/1.0"})
+        req = Request(url, headers={"User-Agent": "ReachIQ/1.0"})
         with urlopen(req, timeout=10, context=_SSL_CONTEXT) as resp:
             data = json.loads(resp.read().decode())
             if "errors" in data:
@@ -89,7 +89,7 @@ def _normalize_article(a: dict, category: str) -> dict:
 @router.get("/world")
 async def get_world_news():
     """
-    Fetch recent world news relevant to Polydeal decision-making.
+    Fetch recent world news relevant to ReachIQ decision-making.
     Combines Business, Technology, and B2B/digital marketing headlines.
     """
     articles = []

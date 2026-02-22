@@ -28,7 +28,7 @@ class GrowthModelManager:
         if model_path is None:
             model_path = os.path.join(
                 os.path.dirname(__file__),
-                "../../models/polydeal_model.pkl"
+                "../../models/reachiq_model.pkl"
             )
         
         self.model_path = model_path
