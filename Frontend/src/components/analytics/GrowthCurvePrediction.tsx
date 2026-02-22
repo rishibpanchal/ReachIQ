@@ -3,6 +3,9 @@
  * 
  * Displays dynamic growth curve prediction with optimal stopping point analysis.
  * Uses ML-based probability predictions and mathematical optimization.
+ * 
+ * Now supports dynamic channel selection based on top 2 channels predicted by ML model.
+ * Channels are NOT hardcoded - they are derived from the outreach engine.
  */
 
 import { useQuery } from '@tanstack/react-query'
@@ -41,10 +44,14 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000
 interface GrowthStep {
   step: number
   channel: string
+  display_name?: string
   probability: number
   base_probability: number
   decay_adjusted: number
   channel_effectiveness: number
+  channel_score?: number
+  channel_weight?: number
+  is_primary_channel?: boolean
 }
 
 interface GrowthCurveData {
@@ -56,6 +63,7 @@ interface GrowthCurveData {
   roi_score: number
   marginal_gains: number[]
   stopping_threshold: number
+  dynamic_sequence_used?: boolean
   metrics: {
     cumulative_probability: number[]
     optimal_probability: number
@@ -69,6 +77,21 @@ interface GrowthCurveData {
 
 interface GrowthCurvePredictionProps {
   companyId: string
+}
+
+// Helper function to get color based on channel type
+const getChannelColor = (isPrimary: boolean): string => {
+  return isPrimary ? '#3b82f6' : '#60a5fa' // Blue for primary, lighter blue for secondary
+}
+
+const getChannelBgColor = (isPrimary: boolean): string => {
+  return isPrimary ? 'bg-blue-500/10' : 'bg-blue-300/5'
+}
+
+const getChannelBadgeColor = (isPrimary: boolean): string => {
+  return isPrimary 
+    ? 'bg-blue-500/20 text-blue-700 border-blue-500/20' 
+    : 'bg-blue-300/20 text-blue-600 border-blue-300/20'
 }
 
 export default function GrowthCurvePrediction({ companyId }: GrowthCurvePredictionProps) {
@@ -112,11 +135,16 @@ export default function GrowthCurvePrediction({ companyId }: GrowthCurvePredicti
 
   const curveData = data.data
 
-  // Prepare chart data
+  // Extract primary and secondary channels from steps
+  const primaryChannel = curveData.steps[0]?.channel || 'Primary'
+  const secondaryChannel = curveData.steps[2]?.channel || 'Secondary'
+  const isPrimaryChannelMode = curveData.dynamic_sequence_used !== false
+
+  // Prepare chart data with dynamic channel information
   const chartData = curveData.steps.map((step, index) => ({
     step: `Step ${step.step}`,
     stepNumber: step.step,
-    channel: step.channel,
+    channel: step.display_name || step.channel,
     probability: (step.probability * 100).toFixed(2),
     probabilityRaw: step.probability,
     cumulative: curveData.metrics.cumulative_probability?.[index]
@@ -126,6 +154,8 @@ export default function GrowthCurvePrediction({ companyId }: GrowthCurvePredicti
     marginalGain: curveData.marginal_gains[index]
       ? (curveData.marginal_gains[index] * 100).toFixed(2)
       : 0,
+    isPrimary: step.is_primary_channel !== false,
+    channelScore: step.channel_score ? (step.channel_score * 100).toFixed(0) : null,
   }))
 
   // Prepare marginal gains chart data
@@ -154,11 +184,21 @@ export default function GrowthCurvePrediction({ companyId }: GrowthCurvePredicti
                 <div className="rounded-lg bg-primary/10 p-2">
                   <Activity className="h-6 w-6 text-primary" />
                 </div>
-                <div>
+                <div className="flex-1">
                   <CardTitle className="text-2xl">Growth Curve Prediction</CardTitle>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    ML-powered optimal outreach sequence analysis
-                  </p>
+                  <div className="flex items-center gap-4 mt-2">
+                    <p className="text-sm text-muted-foreground">
+                      {isPrimaryChannelMode ? 'Dynamic channels: ' : 'Channels: '}
+                      <span className="font-semibold text-foreground">{primaryChannel}</span>
+                      <span className="text-muted-foreground mx-2">→</span>
+                      <span className="font-semibold text-foreground">{secondaryChannel}</span>
+                    </p>
+                    {isPrimaryChannelMode && (
+                      <Badge variant="outline" className="text-xs">
+                        ML-Predicted
+                      </Badge>
+                    )}
+                  </div>
                 </div>
               </div>
               <Badge className="bg-primary/20 text-primary text-lg px-4 py-2">
@@ -176,7 +216,7 @@ export default function GrowthCurvePrediction({ companyId }: GrowthCurvePredicti
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.1 }}
         >
-          <Card className="bg-gradient-to-br from-green-500/10 to-transparent border-green-500/20">
+          <Card className={`bg-gradient-to-br from-green-500/10 to-transparent border-green-500/20`}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -184,9 +224,16 @@ export default function GrowthCurvePrediction({ companyId }: GrowthCurvePredicti
                   <p className="text-3xl font-bold text-green-500 mt-1">
                     Step {optimalStep}
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {chartData[optimalStep - 1]?.channel || 'N/A'}
-                  </p>
+                  <div className="space-y-1 mt-2">
+                    <p className="text-xs text-muted-foreground">
+                      {chartData[optimalStep - 1]?.channel || 'N/A'}
+                    </p>
+                    {chartData[optimalStep - 1]?.channelScore && (
+                      <p className="text-xs text-green-600 font-medium">
+                        Confidence: {chartData[optimalStep - 1].channelScore}%
+                      </p>
+                    )}
+                  </div>
                 </div>
                 <Target className="h-10 w-10 text-green-500 opacity-50" />
               </div>
@@ -507,52 +554,78 @@ export default function GrowthCurvePrediction({ companyId }: GrowthCurvePredicti
           <CardHeader>
             <CardTitle>Step-by-Step Breakdown</CardTitle>
             <p className="text-sm text-muted-foreground">
-              Detailed probability analysis for each outreach step
+              Detailed probability analysis for each outreach step with dynamic channel visualization
             </p>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {curveData.steps.map((step) => (
-                <div
-                  key={step.step}
-                  className={`flex items-center justify-between rounded-lg border p-4 transition-all ${
-                    step.step === optimalStep
-                      ? 'border-green-500 bg-green-500/10'
-                      : 'bg-card hover:bg-accent'
-                  }`}
-                >
-                  <div className="flex items-center gap-4">
-                    <div
-                      className={`flex h-10 w-10 items-center justify-center rounded-full font-bold ${
-                        step.step === optimalStep
-                          ? 'bg-green-500 text-white'
-                          : 'bg-primary/10 text-primary'
-                      }`}
-                    >
-                      {step.step}
+              {curveData.steps.map((step) => {
+                const displayName = step.display_name || step.channel
+                const isPrimary = step.is_primary_channel !== false
+                const channelColor = getChannelColor(isPrimary)
+                
+                return (
+                  <div
+                    key={step.step}
+                    className={`flex items-center justify-between rounded-lg border p-4 transition-all ${
+                      step.step === optimalStep
+                        ? 'border-green-500 bg-green-500/10'
+                        : 'bg-card hover:bg-accent'
+                    } ${getChannelBgColor(isPrimary)}`}
+                  >
+                    <div className="flex items-center gap-4 flex-1">
+                      <div
+                        className={`flex h-10 w-10 items-center justify-center rounded-full font-bold text-white ${
+                          step.step === optimalStep
+                            ? 'bg-green-500'
+                            : isPrimary
+                            ? 'bg-blue-500'
+                            : 'bg-blue-300'
+                        }`}
+                      >
+                        {step.step}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium">{displayName}</p>
+                          <Badge
+                            variant="outline"
+                            className={`text-xs ${getChannelBadgeColor(isPrimary)}`}
+                          >
+                            {isPrimary ? 'Primary Channel' : 'Secondary Channel'}
+                          </Badge>
+                          {step.channel_score && (
+                            <Badge variant="secondary" className="text-xs">
+                              Score: {(step.channel_score * 100).toFixed(0)}%
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Channel effectiveness: {(step.channel_effectiveness * 100).toFixed(1)}%
+                          {step.channel_weight && (
+                            <span className="ml-2">
+                              | Weight: {(step.channel_weight).toFixed(2)}x
+                            </span>
+                          )}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-medium">{step.channel}</p>
-                      <p className="text-xs text-muted-foreground">
-                        Channel effectiveness: {(step.channel_effectiveness * 100).toFixed(1)}%
-                      </p>
+
+                    <div className="flex items-center gap-6">
+                      <div className="text-right">
+                        <p className="text-sm text-muted-foreground">Step Probability</p>
+                        <p className="text-xl font-bold" style={{ color: channelColor }}>
+                          {(step.probability * 100).toFixed(2)}%
+                        </p>
+                      </div>
+
+                      {step.step === optimalStep && (
+                        <Badge className="bg-green-500 text-white">Optimal Stop</Badge>
+                      )}
                     </div>
                   </div>
-
-                  <div className="flex items-center gap-6">
-                    <div className="text-right">
-                      <p className="text-sm text-muted-foreground">Step Probability</p>
-                      <p className="text-xl font-bold text-primary">
-                        {(step.probability * 100).toFixed(2)}%
-                      </p>
-                    </div>
-
-                    {step.step === optimalStep && (
-                      <Badge className="bg-green-500 text-white">Optimal Stop</Badge>
-                    )}
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </CardContent>
         </Card>

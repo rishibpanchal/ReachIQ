@@ -3,6 +3,8 @@ Growth Pipeline - End-to-End Orchestrator
 
 This module orchestrates the complete growth curve prediction pipeline,
 from fetching company data to computing optimal stopping points.
+
+Enhanced with dynamic channel prediction, sequence building, and priority weighting.
 """
 
 import logging
@@ -12,6 +14,9 @@ import numpy as np
 from .growth_model import get_model_manager
 from .probability_engine import ProbabilityEngine
 from .sequence_optimizer import SequenceOptimizer
+from .channel_predictor import ChannelPredictor
+from .sequence_builder import SequenceBuilder
+from .priority_weighting import PriorityWeightingEngine
 
 logger = logging.getLogger(__name__)
 
@@ -24,22 +29,59 @@ class GrowthPipeline:
         self.model_manager = get_model_manager()
         self.probability_engine = ProbabilityEngine()
         self.sequence_optimizer = SequenceOptimizer()
+        self.channel_predictor = ChannelPredictor()
+        self.sequence_builder = SequenceBuilder()
+        self.priority_weighting_engine = PriorityWeightingEngine()
+    
+    def predict_top_channels(
+        self,
+        company_id: str,
+        company_features: Dict,
+        historical_data: Optional[Dict] = None,
+        num_channels: int = 2
+    ) -> List[Dict]:
+        """
+        Predict top N outreach channels for a company.
+        
+        Args:
+            company_id: Unique company identifier
+            company_features: Dictionary of company-level features
+            historical_data: Optional historical engagement data
+            num_channels: Number of top channels to return
+            
+        Returns:
+            List of top channels with scores
+        """
+        logger.info(f"Predicting top {num_channels} channels for company {company_id}")
+        
+        top_channels = self.channel_predictor.predict_top_channels(
+            company_features,
+            historical_data,
+            num_channels
+        )
+        
+        return top_channels
     
     def predict_growth_curve(
         self,
         company_id: str,
         company_features: Dict,
-        outreach_sequence: List[Dict],
-        historical_data: Optional[Dict] = None
+        outreach_sequence: Optional[List[Dict]] = None,
+        historical_data: Optional[Dict] = None,
+        use_dynamic_channels: bool = True
     ) -> Dict:
         """
         Predict complete growth curve for a company's outreach sequence.
         
+        If outreach_sequence is not provided, it will be dynamically built from
+        the top 2 predicted channels.
+        
         Args:
             company_id: Unique company identifier
             company_features: Dictionary of company-level features
-            outreach_sequence: List of outreach steps, each with 'step' and 'channel'
+            outreach_sequence: List of outreach steps. If None, will be dynamically generated.
             historical_data: Optional historical engagement data
+            use_dynamic_channels: If True and outreach_sequence is None, build sequence from top channels
             
         Returns:
             Complete growth curve prediction with optimal stopping point
@@ -47,30 +89,66 @@ class GrowthPipeline:
         logger.info(f"Starting growth curve prediction for company {company_id}")
         
         try:
-            # Step 1: Compute probabilities for each step
+            # Step 1: Predict top channels and build sequence if not provided
+            if outreach_sequence is None and use_dynamic_channels:
+                logger.info(f"Building dynamic sequence for {company_id}")
+                top_channels = self.predict_top_channels(
+                    company_id,
+                    company_features,
+                    historical_data,
+                    num_channels=2
+                )
+                outreach_sequence = self.sequence_builder.build_sequence(top_channels)
+                logger.info(f"Dynamic sequence built: {[s['display_name'] for s in outreach_sequence]}")
+            elif outreach_sequence is None:
+                # Fallback to default sequence if dynamic channels disabled
+                outreach_sequence = [
+                    {"step": 1, "channel": "LinkedIn", "type": "initial"},
+                    {"step": 2, "channel": "LinkedIn", "type": "followup"},
+                    {"step": 3, "channel": "Email", "type": "initial"},
+                    {"step": 4, "channel": "Email", "type": "followup"}
+                ]
+            
+            # Step 2: Compute base probabilities for each step
             step_predictions = self._compute_step_probabilities(
                 company_features,
                 outreach_sequence,
                 historical_data
             )
             
-            # Step 2: Extract probabilities for optimization
+            # Step 3: Apply priority weighting based on channel scores
+            if use_dynamic_channels and any('channel_score' in step for step in outreach_sequence):
+                logger.info("Applying priority weighting to probabilities")
+                base_probs = [step['base_probability'] for step in step_predictions]
+                weighted_sequence = self.priority_weighting_engine.apply_weights_to_sequence(
+                    base_probs,
+                    outreach_sequence
+                )
+                
+                # Merge weighted probabilities back into step predictions
+                for i, weighted_step in enumerate(weighted_sequence):
+                    step_predictions[i]['probability'] = weighted_step['priority_adjusted_probability']
+                    step_predictions[i]['channel_score'] = weighted_step.get('channel_score', 0.5)
+                    step_predictions[i]['channel_weight'] = weighted_step.get('channel_weight', 1.0)
+                    step_predictions[i]['is_primary_channel'] = weighted_step.get('is_primary', True)
+            
+            # Step 4: Extract probabilities for optimization
             probabilities = [step['probability'] for step in step_predictions]
             
-            # Step 3: Find optimal stopping point
+            # Step 5: Find optimal stopping point
             optimization_result = self.sequence_optimizer.find_optimal_stopping_point(
                 probabilities,
                 company_features,
                 historical_data
             )
             
-            # Step 4: Compute additional metrics
+            # Step 6: Compute additional metrics
             metrics = self._compute_additional_metrics(
                 step_predictions,
                 optimization_result
             )
             
-            # Step 5: Construct response
+            # Step 7: Construct response
             result = {
                 "company_id": company_id,
                 "steps": step_predictions,
@@ -81,7 +159,8 @@ class GrowthPipeline:
                 "marginal_gains": optimization_result['marginal_gains'],
                 "stopping_threshold": optimization_result['stopping_threshold'],
                 "metrics": metrics,
-                "model_info": self.model_manager.get_model_info()
+                "model_info": self.model_manager.get_model_info(),
+                "dynamic_sequence_used": use_dynamic_channels and outreach_sequence is not None
             }
             
             logger.info(f"Growth curve prediction completed for company {company_id}")
