@@ -1,4 +1,4 @@
-# LOC8 - AI Outreach Intelligence Platform
+# ReachIQ - AI Outreach Intelligence Platform
 
 A comprehensive AI-powered business intelligence and outreach platform combining real-time signal detection, growth prediction, and hyper-personalized engagement strategies.
 
@@ -13,7 +13,7 @@ A comprehensive AI-powered business intelligence and outreach platform combining
 ```bash
 # 1. Clone the repository
 git clone <repo-url>
-cd Royal_Flush_LOC8A2
+cd ReachIQ
 
 # 2. Configure environment
 cp .env.example .env
@@ -33,7 +33,7 @@ For detailed Docker instructions, see [DOCKER.md](DOCKER.md)
 ## 📁 Project Structure
 
 ```
-Royal_Flush_LOC8A2/
+ReachIQ/
 ├── Backend/              # Python FastAPI backend
 │   ├── main.py          # Application entry point
 │   ├── routes/          # API endpoints

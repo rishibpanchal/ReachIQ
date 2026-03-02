@@ -394,7 +394,7 @@ curl http://localhost:8000/health
 ### Monitoring
 
 Monitor with:
-- Docker stats: `docker stats loc8-backend`
+- Docker stats: `docker stats reachiq-backend`
 - Logs: `docker-compose logs -f backend`
 - APM tools: Sentry, DataDog, New Relic
 

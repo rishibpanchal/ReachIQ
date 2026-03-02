@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# LOC8 Docker Deployment Helper Script
+# ReachIQ Docker Deployment Helper Script
 # Usage: ./docker-deploy.sh [command]
 
 set -e

@@ -1,6 +1,6 @@
 # Docker Deployment Guide
 
-Complete guide for building, running, and managing the LOC8 application with Docker.
+Complete guide for building, running, and managing the ReachIQ application with Docker.
 
 ## Overview
 
@@ -186,7 +186,7 @@ docker-compose build frontend
 
 ```bash
 # List images
-docker images | grep loc8
+docker images | grep reachiq
 
 # Expected sizes:
 # Backend:  ~500MB
@@ -196,9 +196,9 @@ docker images | grep loc8
 
 ## Service Details
 
-### Backend (loc8-backend)
+### Backend (reachiq-backend)
 
-**Image**: `royal_flush_loc8a2-backend:latest`
+**Image**: `reachiq-backend:latest`
 **Base**: Python 3.11-slim
 **Port**: 8000
 **Health Check**: HTTP request to `/docs`
@@ -214,9 +214,9 @@ CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 **Environment Files**:
 - All variables from `.env`
 
-### Frontend (loc8-frontend)
+### Frontend (reachiq-frontend)
 
-**Image**: `royal_flush_loc8a2-frontend:latest`
+**Image**: `reachiq-frontend:latest`
 **Base**: Node 20-alpine
 **Port**: 3000
 **Health Check**: HTTP request to `/`
@@ -238,7 +238,7 @@ CMD ["npm", "run", "dev"]
 - `VITE_API_BASE_URL`
 - `VITE_SUPABASE_FUNCTION_URL`
 
-### Nginx (loc8-nginx)
+### Nginx (reachiq-nginx)
 
 **Image**: `nginx:alpine`
 **Port**: 80 (443 for HTTPS)
@@ -292,7 +292,7 @@ docker-compose up
 
 # Check container status
 docker-compose ps
-docker inspect loc8-backend
+docker inspect reachiq-backend
 ```
 
 ### Networking Issues
@@ -300,7 +300,7 @@ docker inspect loc8-backend
 ```bash
 # Check network
 docker network ls
-docker network inspect royal_flush_loc8a2_loc8-network
+docker network inspect reachiq_reachiq-network
 
 # Services can communicate by container name:
 # backend → http://backend:8000
@@ -425,7 +425,7 @@ git log --oneline
 
 ```yaml
 networks:
-  loc8-network:
+  reachiq-network:
     driver: bridge
     ipam:
       config:
@@ -439,7 +439,7 @@ networks:
 docker volume ls
 
 # Inspect volume
-docker volume inspect royal_flush_loc8a2_backend_data
+docker volume inspect reachiq_backend_data
 
 # Backup volume
 docker run --rm -v src_volume:/data -v $(pwd):/backup \
@@ -453,7 +453,7 @@ docker run --rm -v src_volume:/data -v $(pwd):/backup \
 docker swarm init
 
 # Deploy stack
-docker stack deploy -c docker-compose.yml loc8
+docker stack deploy -c docker-compose.yml reachiq
 ```
 
 ## Additional Resources
